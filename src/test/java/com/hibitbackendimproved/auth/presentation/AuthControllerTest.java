@@ -4,13 +4,12 @@ import com.hibitbackendimproved.ControllerTestSupport;
 import com.hibitbackendimproved.auth.dto.LoginMember;
 import com.hibitbackendimproved.auth.exception.InvalidTokenException;
 import com.hibitbackendimproved.infrastructure.oauth.exception.OAuthException;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-
-import javax.servlet.http.Cookie;
 
 import static com.hibitbackendimproved.common.AuthFixtures.*;
 import static com.hibitbackendimproved.common.fixtures.MemberFixtures.FANCY_ID;
@@ -46,7 +45,7 @@ class AuthControllerTest extends ControllerTestSupport {
                         pathParameters(
                                 parameterWithName("oauthProvider").description("OAuth 로그인 제공자 (GOOGLE)")
                         ),
-                        requestParameters(
+                        queryParameters(
                                 parameterWithName("redirectUri").description("OAuth Redirect URI")
                         ),
                         responseFields(

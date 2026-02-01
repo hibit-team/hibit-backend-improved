@@ -43,7 +43,7 @@ class ProfileServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         ProfileCreateRequest request = ProfileCreateRequest.builder()
                 .nickname("devFancy")
@@ -76,7 +76,7 @@ class ProfileServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile profile = 팬시_프로필(member);
         Long memberId = profileRepository.save(profile).getMember().getId();
@@ -113,7 +113,7 @@ class ProfileServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile profile = 팬시_프로필(member);
         Long memberId = profileRepository.save(profile).getMember().getId();
@@ -157,7 +157,7 @@ class ProfileServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile profile = 팬시_프로필(member);
         Long memberId = profileRepository.save(profile).getMember().getId();

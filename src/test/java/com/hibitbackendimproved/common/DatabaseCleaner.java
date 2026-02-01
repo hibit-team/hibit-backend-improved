@@ -1,11 +1,11 @@
 package com.hibitbackendimproved.common;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Table;
+import jakarta.persistence.metamodel.Type;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Table;
-import javax.persistence.metamodel.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class DatabaseCleaner {
 
     private final EntityManager entityManager;
-
     private final List<String> tableNames;
 
     public DatabaseCleaner(final EntityManager entityManager) {

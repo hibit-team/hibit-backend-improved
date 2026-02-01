@@ -6,6 +6,8 @@ import com.hibitbackendimproved.member.domain.MemberRepository;
 import com.hibitbackendimproved.post.exception.NotFoundPostException;
 import com.hibitbackendimproved.profile.domain.Profile;
 import com.hibitbackendimproved.profile.domain.ProfileRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +19,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static com.hibitbackendimproved.common.fixtures.MemberFixtures.팬시;
