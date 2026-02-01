@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:db?serverTimezone=Asia/Seoul;MODE=MYSQL;
+    url: jdbc:h2:mem:db;MODE=MySQL;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -8,7 +8,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: none # JPA Setting
+      ddl-auto: create
     show_sql: true
     properties:
       dialect: org.hibernate.dialect.MySQL8Dialect

@@ -5,8 +5,24 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-application-prod.yml
+### AWS ###
+**/docker-compose-live.yml
+
+### Application ###
+**/application-staging.yml
+**/application-live.yml
+**/application-prod.yml
 .env
+
+### Logging ###
+**/logback-staging.xml
+**/logback-live.xml
+
+### Monitoring ###
+**/prometheus-staging.yml
+**/prometheus-live.yml
+**/promtail-config-staging.yml
+**/promtail-config-live.yml
 
 ### STS ###
 .apt_generated
