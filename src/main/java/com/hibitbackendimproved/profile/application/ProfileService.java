@@ -32,7 +32,7 @@ public class ProfileService {
         if (profileRepository.existsByMemberId(memberId)) {
             throw new InvalidProfileAlreadyException("프로필이 이미 존재합니다.");
         }
-        Member foundMember = memberRepository.getById(memberId);
+        Member foundMember = memberRepository.getByIdOrThrow(memberId);
         Profile profile = createProfile(request, foundMember);
         Profile savedProfile = profileRepository.save(profile);
 
@@ -76,7 +76,7 @@ public class ProfileService {
         Profile profile = profileRepository.findByMemberId(memberId)
                         .orElseThrow(NotFoundProfileException::new);
         validateExistByNickname(request.getNickname());
-        Member foundMember = memberRepository.getById(memberId);
+        Member foundMember = memberRepository.getByIdOrThrow(memberId);
 
         updateProfileInfo(profile, request);
         updateMemberInfo(foundMember, profile);

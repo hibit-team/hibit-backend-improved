@@ -10,6 +10,7 @@ import com.hibitbackendimproved.post.dto.response.PostDetailResponse;
 import com.hibitbackendimproved.post.dto.response.PostsCountResponse;
 import com.hibitbackendimproved.post.dto.response.PostsResponse;
 import com.hibitbackendimproved.post.dto.response.PostsSliceResponse;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 

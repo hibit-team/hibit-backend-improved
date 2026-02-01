@@ -48,7 +48,7 @@ public class PostService {
     @Transactional
     public PostDetailResponse save(final LoginMember loginMember, final PostCreateRequest request) {
         validateMember(loginMember.getId());
-        Member foundMember = memberRepository.getById(loginMember.getId());
+        Member foundMember = memberRepository.getByIdOrThrow(loginMember.getId());
         Post savedPost = request.toEntity(foundMember, request);
         postRepository.save(savedPost);
         return PostDetailResponse.of(savedPost, loginMember);
@@ -109,7 +109,7 @@ public class PostService {
 
     @Transactional
     public void update(final Long memberId, final Long postId, final PostUpdateServiceRequest request) {
-        Member member = memberRepository.getById(memberId);
+        Member member = memberRepository.getByIdOrThrow(memberId);
         Post post = findPostObject(postId);
         validateProductMembership(memberId, post);
 

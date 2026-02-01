@@ -2,9 +2,9 @@ package com.hibitbackendimproved.auth.presentation;
 
 import com.hibitbackendimproved.auth.exception.EmptyAuthorizationHeaderException;
 import com.hibitbackendimproved.auth.exception.InvalidTokenException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 public class AuthorizationExtractor {

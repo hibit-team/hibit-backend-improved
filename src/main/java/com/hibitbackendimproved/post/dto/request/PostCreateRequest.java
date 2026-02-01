@@ -5,12 +5,12 @@ import com.hibitbackendimproved.member.domain.Member;
 import com.hibitbackendimproved.post.domain.Post;
 import com.hibitbackendimproved.post.domain.PostStatus;
 import com.hibitbackendimproved.post.domain.TogetherActivity;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter

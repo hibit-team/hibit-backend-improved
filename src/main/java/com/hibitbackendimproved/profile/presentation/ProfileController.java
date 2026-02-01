@@ -10,11 +10,11 @@ import com.hibitbackendimproved.profile.dto.request.ProfileCreateRequest;
 import com.hibitbackendimproved.profile.dto.request.ProfileUpdateRequest;
 import com.hibitbackendimproved.profile.dto.response.ProfileOtherResponse;
 import com.hibitbackendimproved.profile.dto.response.ProfileResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 

@@ -3,13 +3,13 @@ package com.hibitbackendimproved.profile.dto.request;
 import com.hibitbackendimproved.profile.domain.AddressCity;
 import com.hibitbackendimproved.profile.domain.AddressDistrict;
 import com.hibitbackendimproved.profile.domain.PersonalityType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

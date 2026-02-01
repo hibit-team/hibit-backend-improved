@@ -56,7 +56,7 @@ public class AuthService {
     private Member findMember(final OAuthMember oAuthMember) {
         String email = oAuthMember.getEmail();
         if (memberRepository.existsByEmail(email)) {
-            return memberRepository.getByEmail(email);
+            return memberRepository.getByEmailOrThrow(email);
         }
         return saveMember(oAuthMember);
     }

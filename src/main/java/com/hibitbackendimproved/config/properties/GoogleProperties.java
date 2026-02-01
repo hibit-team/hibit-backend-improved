@@ -2,12 +2,10 @@ package com.hibitbackendimproved.config.properties;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
 import java.util.List;
 
 @ConfigurationProperties("oauth.google")
-@ConstructorBinding
 public class GoogleProperties {
     private final String clientId;
     private final String clientSecret;

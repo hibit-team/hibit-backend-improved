@@ -11,6 +11,7 @@ import com.hibitbackendimproved.member.exception.InvalidMemberException;
 import com.hibitbackendimproved.member.exception.NotFoundMemberException;
 import com.hibitbackendimproved.post.exception.*;
 import com.hibitbackendimproved.profile.exception.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

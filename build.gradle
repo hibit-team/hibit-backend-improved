@@ -63,6 +63,10 @@ ext { // (5) 문서 조각들에 대한 경로를 지정
     snippetsDir = file('build/generated-snippets')
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation"
+}
+
 tasks.named('bootBuildImage') {
     builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
@@ -86,26 +90,26 @@ asciidoctor {
 
 jacoco {
     // JaCoCo 버전
-    toolVersion = '0.8.7'
+    toolVersion = "${jacocoVersion}"
 }
 
 jacocoTestReport {
     reports {
         // 원하는 리포트를 켜고 끌 수 있습니다.
-        html.enabled true
-        xml.enabled true
-        csv.enabled true
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(true)
 
-        //  각 리포트 타입마다 리포트 저장 경로를 설정할 수 있습니다.
-        html.destination file("${buildDir}/jacoco/index.html")
-        xml.destination file("${buildDir}/jacoco/index.xml")
-        csv.destination file("${buildDir}/jacoco/index.csv")
+        // 각 리포트 타입마다 리포트 저장 경로를 설정할 수 있습니다.
+        html.outputLocation.set(layout.buildDirectory.dir("jacoco/html"))
+        xml.outputLocation.set(layout.buildDirectory.file("jacoco/index.xml"))
+        csv.outputLocation.set(layout.buildDirectory.file("jacoco/index.csv"))
     }
     afterEvaluate {
         classDirectories.setFrom(
                 files(classDirectories.files.collect {
                     fileTree(
-                            dir: "$buildDir/classes/java/main",
+                            dir: layout.buildDirectory.dir("classes/java/main").get().asFile,
                             excludes: [
                                     '**/*Application*',
                                     '**/*Exception*',

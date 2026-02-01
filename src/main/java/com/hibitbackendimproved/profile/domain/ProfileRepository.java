@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
-    default Profile getById(final Long id) {
+    default Profile getByIdOrThrow(final Long id) {
         return this.findById(id)
                 .orElseThrow(NotFoundProfileException::new);
     }

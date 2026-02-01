@@ -11,11 +11,11 @@ import com.hibitbackendimproved.auth.dto.response.AccessAndRefreshTokenResponse;
 import com.hibitbackendimproved.auth.dto.response.AccessTokenResponse;
 import com.hibitbackendimproved.auth.dto.response.OAuthUriResponse;
 import com.hibitbackendimproved.support.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 @RequestMapping("/api/auth")
 @RestController

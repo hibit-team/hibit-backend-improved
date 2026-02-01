@@ -16,6 +16,6 @@ public class MemberService {
     }
 
     public MemberResponse findById(final Long id) {
-        return new MemberResponse(memberRepository.getById(id));
+        return new MemberResponse(memberRepository.getByIdOrThrow(id));
     }
 }
