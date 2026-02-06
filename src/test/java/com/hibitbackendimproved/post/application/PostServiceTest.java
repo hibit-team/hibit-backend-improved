@@ -89,8 +89,11 @@ class PostServiceTest extends IntegrationTestSupport {
         assertAll(
                 () -> assertEquals(request.getTitle(), actual.getTitle().getValue()),
                 () -> assertEquals(request.getContent(), actual.getContent().getValue()),
-                () -> assertEquals(request.getExhibition(), actual.getExhibition().getValue()),
-                () -> assertEquals(request.getExhibitionImage(), actual.getExhibitionImage()),
+                () -> assertEquals(request.getExhibitionTitle(), actual.getExhibition().getTitle()),
+                () -> assertEquals(request.getExhibitionLink(), actual.getExhibition().getLink()),
+                () -> assertEquals(request.getExhibitionImage(), actual.getExhibition().getImage()),
+                () -> assertEquals(request.getExhibitionPlace(), actual.getExhibition().getPlace()),
+                () -> assertEquals(request.getExhibitionPrice(), actual.getExhibition().getPrice()),
                 () -> assertEquals(request.getOpenChatUrl(), actual.getOpenChatUrl()),
                 () -> assertEquals(request.getPostStatus(), actual.getPostStatus())
         );
@@ -120,7 +123,10 @@ class PostServiceTest extends IntegrationTestSupport {
                 () -> assertThat(response.getWriterId()).isEqualTo(post.getMember().getId()),
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle().getValue()),
                 () -> assertThat(response.getContent()).isEqualTo(post.getContent().getValue()),
-                () -> assertThat(response.getExhibition()).isEqualTo(post.getExhibition().getValue())
+                () -> assertThat(response.getExhibitionLink()).isEqualTo(post.getExhibition().getLink()),
+                () -> assertThat(response.getExhibitionTitle()).isEqualTo(post.getExhibition().getTitle()),
+                () -> assertThat(response.getExhibitionPlace()).isEqualTo(post.getExhibition().getPlace()),
+                () -> assertThat(response.getExhibitionPrice()).isEqualTo(post.getExhibition().getPrice())
         );
     }
 
@@ -297,8 +303,11 @@ class PostServiceTest extends IntegrationTestSupport {
         assertAll(
                 () -> assertThat(updatedPost.getTitle().getValue()).isEqualTo(request.getTitle()),
                 () -> assertThat(updatedPost.getContent().getValue()).isEqualTo(request.getContent()),
-                () -> assertThat(updatedPost.getExhibition().getValue()).isEqualTo(request.getExhibition()),
-                () -> assertThat(updatedPost.getExhibitionImage()).isEqualTo(request.getExhibitionImage()),
+                () -> assertThat(updatedPost.getExhibition().getTitle()).isEqualTo(request.getExhibitionTitle()),
+                () -> assertThat(updatedPost.getExhibition().getLink()).isEqualTo(request.getExhibitionLink()),
+                () -> assertThat(updatedPost.getExhibition().getImage()).isEqualTo(request.getExhibitionImage()),
+                () -> assertThat(updatedPost.getExhibition().getPlace()).isEqualTo(request.getExhibitionPlace()),
+                () -> assertThat(updatedPost.getExhibition().getPrice()).isEqualTo(request.getExhibitionPrice()),
                 () -> assertThat(updatedPost.getOpenChatUrl()).isEqualTo(request.getOpenChatUrl()),
                 () -> assertThat(updatedPost.getPostStatus()).isEqualTo(request.getPostStatus())
         );
@@ -328,26 +337,30 @@ class PostServiceTest extends IntegrationTestSupport {
     }
 
     private static PostCreateRequest getPostCreateRequest() {
-        PostCreateRequest request = PostCreateRequest.builder()
+        return PostCreateRequest.builder()
                 .title(게시글제목)
                 .content(게시글내용)
-                .exhibition(전시회제목)
+                .exhibitionTitle(전시회제목)
+                .exhibitionLink(전시회링크)
                 .exhibitionImage(전시회이미지)
+                .exhibitionPlace(전시회장소)
+                .exhibitionPrice(전시회가격)
                 .openChatUrl(오픈채팅방Url)
                 .postStatus(모집상태)
                 .build();
-        return request;
     }
 
     private static PostUpdateServiceRequest getPostUpdateServiceRequest() {
-        PostUpdateServiceRequest request = PostUpdateServiceRequest.builder()
+        return PostUpdateServiceRequest.builder()
                 .title(게시글제목2)
                 .content(게시글내용2)
-                .exhibition(전시회제목2)
+                .exhibitionTitle(전시회제목2)
+                .exhibitionLink(전시회링크2)
                 .exhibitionImage(전시회이미지2)
+                .exhibitionPlace(전시회장소2)
+                .exhibitionPrice(전시회가격2)
                 .openChatUrl(오픈채팅방Url2)
                 .postStatus(모집상태2)
                 .build();
-        return request;
     }
 }

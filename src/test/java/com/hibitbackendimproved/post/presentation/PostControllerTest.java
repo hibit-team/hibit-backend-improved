@@ -40,7 +40,9 @@ class PostControllerTest extends ControllerTestSupport {
     private static final PostResponse POST_RESPONSE_1 = PostResponse.builder()
             .id(1L)
             .title("게시글 제목1")
-            .exhibition("전시회 제목1")
+            .exhibitionTitle("전시회 제목1")
+            .exhibitionPlace("서울시청")
+            .exhibitionPrice(10000)
             .exhibitionImage("전시회 이미지1")
             .postStatus(PostStatus.HOLDING)
             .createDateTime(LocalDateTime.now())
@@ -49,8 +51,10 @@ class PostControllerTest extends ControllerTestSupport {
     private static final PostResponse POST_RESPONSE_2 = PostResponse.builder()
             .id(2L)
             .title("게시글 제목2")
-            .exhibition("전시회 제목2")
-            .exhibitionImage("전시회 이미지")
+            .exhibitionTitle("전시회 제목2")
+            .exhibitionPlace("예술의 전당")
+            .exhibitionPrice(20000)
+            .exhibitionImage("전시회 이미지2")
             .postStatus(PostStatus.HOLDING)
             .createDateTime(LocalDateTime.now())
             .build();
@@ -62,8 +66,11 @@ class PostControllerTest extends ControllerTestSupport {
         PostCreateRequest request = PostCreateRequest.builder()
                 .title(게시글제목)
                 .content(게시글내용)
-                .exhibition(전시회제목)
+                .exhibitionTitle(전시회제목)
+                .exhibitionLink(전시회링크)
                 .exhibitionImage(전시회이미지)
+                .exhibitionPlace(전시회장소)
+                .exhibitionPrice(전시회가격)
                 .openChatUrl(오픈채팅방Url)
                 .postStatus(모집상태)
                 .build();
@@ -86,22 +93,30 @@ class PostControllerTest extends ControllerTestSupport {
                                 requestFields(
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("게시글 내용"),
-                                        fieldWithPath("exhibition").type(JsonFieldType.STRING).description("전시회 제목"),
+
+                                        fieldWithPath("exhibitionTitle").type(JsonFieldType.STRING).description("전시회 제목"),
+                                        fieldWithPath("exhibitionLink").type(JsonFieldType.STRING).description("전시회 링크"),
                                         fieldWithPath("exhibitionImage").type(JsonFieldType.STRING).description("전시회 이미지"),
+                                        fieldWithPath("exhibitionPlace").type(JsonFieldType.STRING).description("전시회 장소"),
+                                        fieldWithPath("exhibitionPrice").type(JsonFieldType.NUMBER).description("전시회 가격"),
                                         fieldWithPath("openChatUrl").type(JsonFieldType.STRING).description("오픈 채팅방 URL 주소"),
-                                        fieldWithPath("postStatus").type(JsonFieldType.STRING).optional().description("모집상태 타입(HOLDING | CANCELLED | COMPLETED)")),
+                                        fieldWithPath("postStatus").type(JsonFieldType.STRING).optional().description("모집상태 타입")),
                                 responseFields(
                                         fieldWithPath("meta.code").type(JsonFieldType.NUMBER).description("응답 코드"),
                                         fieldWithPath("meta.message").type(JsonFieldType.STRING).description("응답 메시지"),
                                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("게시글 ID"),
-                                        fieldWithPath("data.writerId").type(JsonFieldType.NUMBER).description("로그인한 사용자 ID"),
+                                        fieldWithPath("data.writerId").type(JsonFieldType.NUMBER).description("작성자 ID"),
                                         fieldWithPath("data.title").type(JsonFieldType.STRING).description("게시글 제목"),
                                         fieldWithPath("data.content").type(JsonFieldType.STRING).description("게시글 내용"),
-                                        fieldWithPath("data.exhibition").type(JsonFieldType.STRING).description("전시회 제목"),
+                                        fieldWithPath("data.exhibitionTitle").type(JsonFieldType.STRING).description("전시회 제목"),
+                                        fieldWithPath("data.exhibitionLink").type(JsonFieldType.STRING).description("전시회 링크"),
                                         fieldWithPath("data.exhibitionImage").type(JsonFieldType.STRING).description("전시회 이미지"),
-                                        fieldWithPath("data.openChatUrl").type(JsonFieldType.STRING).description("오픈 채팅방 URL 주소"),
-                                        fieldWithPath("data.postStatus").type(JsonFieldType.STRING).optional().description("모집상태 타입(HOLDING | CANCELLED | COMPLETED)"),
-                                        fieldWithPath("data.viewCount").type(JsonFieldType.NUMBER).description("게시글 조회수"))
+                                        fieldWithPath("data.exhibitionPlace").type(JsonFieldType.STRING).description("전시회 장소"),
+                                        fieldWithPath("data.exhibitionPrice").type(JsonFieldType.NUMBER).description("전시회 가격"),
+
+                                        fieldWithPath("data.openChatUrl").type(JsonFieldType.STRING).description("오픈 채팅방 URL"),
+                                        fieldWithPath("data.postStatus").type(JsonFieldType.STRING).description("모집상태"),
+                                        fieldWithPath("data.viewCount").type(JsonFieldType.NUMBER).description("조회수"))
                         )
                 )
                 .andExpect(status().isCreated());
@@ -141,13 +156,17 @@ class PostControllerTest extends ControllerTestSupport {
         Long postId = 1L;
         PostDetailResponse response = PostDetailResponse.builder()
                 .id(postId)
-                .writerId(팬시.getId())
+                .writerId(1L)
                 .title(게시글제목)
                 .content(게시글내용)
-                .exhibition(전시회제목)
+                .exhibitionTitle(전시회제목)
+                .exhibitionLink(전시회링크)
                 .exhibitionImage(전시회이미지)
+                .exhibitionPlace(전시회장소)
+                .exhibitionPrice(전시회가격)
                 .openChatUrl(오픈채팅방Url)
                 .postStatus(모집상태)
+                .viewCount(0)
                 .build();
 
         // when
@@ -163,6 +182,22 @@ class PostControllerTest extends ControllerTestSupport {
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("id").description("게시글 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("meta.code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                fieldWithPath("meta.message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("게시글 ID"),
+                                fieldWithPath("data.writerId").type(JsonFieldType.NUMBER).description("작성자 ID"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("게시글 제목"),
+                                fieldWithPath("data.content").type(JsonFieldType.STRING).description("게시글 내용"),
+                                fieldWithPath("data.exhibitionTitle").type(JsonFieldType.STRING).description("전시회 제목"),
+                                fieldWithPath("data.exhibitionLink").type(JsonFieldType.STRING).description("전시회 링크"),
+                                fieldWithPath("data.exhibitionImage").type(JsonFieldType.STRING).description("전시회 이미지"),
+                                fieldWithPath("data.exhibitionPlace").type(JsonFieldType.STRING).description("전시회 장소"),
+                                fieldWithPath("data.exhibitionPrice").type(JsonFieldType.NUMBER).description("전시회 가격"),
+                                fieldWithPath("data.openChatUrl").type(JsonFieldType.STRING).description("오픈 채팅방 URL"),
+                                fieldWithPath("data.postStatus").type(JsonFieldType.STRING).description("모집상태"),
+                                fieldWithPath("data.viewCount").type(JsonFieldType.NUMBER).description("조회수")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -261,7 +296,7 @@ class PostControllerTest extends ControllerTestSupport {
 
     @DisplayName("게시글의 일부 속성을 수정하면 204를 반환한다.")
     @Test
-    void 게시글의_일부_속성을_수정한다() throws Exception {
+    void 게시글의_일부_속성을_수정하면_204를_반환한다() throws Exception {
         // given
         Long postId = 1L;
         willDoNothing()
@@ -271,8 +306,11 @@ class PostControllerTest extends ControllerTestSupport {
         PostUpdateRequest request = PostUpdateRequest.builder()
                 .title(게시글제목2)
                 .content(게시글내용2)
-                .exhibition(전시회제목2)
+                .exhibitionTitle(전시회제목2)
+                .exhibitionLink(전시회링크2)
                 .exhibitionImage(전시회이미지2)
+                .exhibitionPlace(전시회장소2)
+                .exhibitionPrice(전시회가격2)
                 .openChatUrl(오픈채팅방Url2)
                 .postStatus(모집상태2)
                 .build();

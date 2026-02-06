@@ -15,7 +15,6 @@ import com.hibitbackendimproved.post.dto.response.PostsCountResponse;
 import com.hibitbackendimproved.post.dto.response.PostsResponse;
 import com.hibitbackendimproved.post.dto.response.PostsSliceResponse;
 import com.hibitbackendimproved.post.exception.NotFoundPostException;
-import com.hibitbackendimproved.profile.domain.Profile;
 import com.hibitbackendimproved.profile.domain.ProfileRepository;
 import com.hibitbackendimproved.profile.exception.NotFoundProfileException;
 import org.springframework.data.domain.Page;
@@ -47,22 +46,12 @@ public class PostService {
 
     @Transactional
     public PostDetailResponse save(final LoginMember loginMember, final PostCreateRequest request) {
-        validateMember(loginMember.getId());
+        validateMemberProfile(loginMember.getId());
         Member foundMember = memberRepository.getByIdOrThrow(loginMember.getId());
-        Post savedPost = request.toEntity(foundMember, request);
+
+        Post savedPost = postRepository.save(request.toEntity(foundMember));
         postRepository.save(savedPost);
         return PostDetailResponse.of(savedPost, loginMember);
-    }
-
-    private void validateMember(final Long memberId) {
-        if (!existProfile(memberId)) {
-            throw new NotFoundProfileException("프로필을 등록해야 게시글을 저장할 수 있습니다.");
-        }
-    }
-
-    private boolean existProfile(final Long memberId) {
-        Profile profile = profileRepository.findByMemberId(memberId).orElse(null);
-        return profile != null;
     }
 
     public PostsResponse findAll() {
@@ -83,14 +72,6 @@ public class PostService {
         return viewCountManager.getUpdatedLog(cookieValue, postId);
     }
 
-    private Post findPostObject(final Long postId) {
-        List<Post> posts = postRepository.findPostById(postId);
-        if (posts.isEmpty()) {
-            throw new NotFoundPostException();
-        }
-        return posts.getFirst();
-    }
-
     public PostsCountResponse countPostWithQuery(final String query) {
         Pageable pageable = PageRequest.of(0, 3, DESC, "created_at");
         SearchQuery searchQuery = new SearchQuery(query);
@@ -109,25 +90,43 @@ public class PostService {
 
     @Transactional
     public void update(final Long memberId, final Long postId, final PostUpdateServiceRequest request) {
-        Member member = memberRepository.getByIdOrThrow(memberId);
         Post post = findPostObject(postId);
-        validateProductMembership(memberId, post);
+        validatePostOwnership(memberId, post);
 
-        post.change(member, request.getTitle(), request.getContent(), request.getExhibition(), request.getExhibitionImage()
-                , request.getOpenChatUrl(), request.getPostStatus());
+        post.update(
+                request.getTitle(),
+                request.getContent(),
+                request.toExhibition(),
+                request.getOpenChatUrl(),
+                request.getPostStatus()
+        );
+    }
+
+    private void validateMemberProfile(final Long memberId) {
+        if (!profileRepository.existsByMemberId(memberId)) {
+            throw new NotFoundProfileException("프로필을 등록해야 게시글을 저장할 수 있습니다.");
+        }
     }
 
     @Transactional
     public void delete(final Long memberId, final Long postId) {
         Post post = findPostObject(postId);
-        validateProductMembership(memberId, post);
+        validatePostOwnership(memberId, post);
 
         postRepository.delete(post);
     }
 
-    private void validateProductMembership(final Long memberId, final Post post) {
-        if (!post.isMember(memberId)) {
+    private void validatePostOwnership(final Long memberId, final Post post) {
+        if (!post.isWriter(memberId)) {
             throw new AuthorizationException();
         }
+    }
+
+    private Post findPostObject(final Long postId) {
+        List<Post> posts = postRepository.findPostById(postId);
+        if (posts.isEmpty()) {
+            throw new NotFoundPostException();
+        }
+        return posts.getFirst();
     }
 }

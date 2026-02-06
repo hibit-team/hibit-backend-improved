@@ -14,19 +14,24 @@ import java.time.LocalDateTime;
 public class PostResponse {
     private Long id;
     private String title;
-    private String exhibition;
+    private String exhibitionTitle;
     private String exhibitionImage;
+    private String exhibitionPlace;
+    private int exhibitionPrice;
     private PostStatus postStatus;
     private LocalDateTime createDateTime;
 
     @Builder
-    public PostResponse(final Long id, final String title
-            , final String exhibition, final String exhibitionImage
-            , final PostStatus postStatus, final LocalDateTime createDateTime) {
+    public PostResponse(final Long id, final String title,
+                        final String exhibitionTitle, final String exhibitionImage,
+                        final String exhibitionPlace, final int exhibitionPrice,
+                        final PostStatus postStatus, final LocalDateTime createDateTime) {
         this.id = id;
         this.title = title;
-        this.exhibition = exhibition;
+        this.exhibitionTitle = exhibitionTitle;
         this.exhibitionImage = exhibitionImage;
+        this.exhibitionPlace = exhibitionPlace;
+        this.exhibitionPrice = exhibitionPrice;
         this.postStatus = postStatus;
         this.createDateTime = createDateTime;
     }
@@ -35,8 +40,10 @@ public class PostResponse {
         return PostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle().getValue())
-                .exhibition(post.getExhibition().getValue())
-                .exhibitionImage(post.getExhibitionImage())
+                .exhibitionTitle(post.getExhibition().getTitle())
+                .exhibitionImage(post.getExhibition().getImage())
+                .exhibitionPlace(post.getExhibition().getPlace())
+                .exhibitionPrice(post.getExhibition().getPrice())
                 .postStatus(post.getPostStatus())
                 .createDateTime(post.getCreateAt())
                 .build();

@@ -2,6 +2,9 @@ package com.hibitbackendimproved.post.domain;
 
 import com.hibitbackendimproved.common.BaseEntity;
 import com.hibitbackendimproved.member.domain.Member;
+import com.hibitbackendimproved.post.domain.vo.Content;
+import com.hibitbackendimproved.post.domain.vo.Exhibition;
+import com.hibitbackendimproved.post.domain.vo.Title;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -38,12 +41,8 @@ public class Post extends BaseEntity {
     @Embedded
     private Content content;
 
-    @Column(name = "exhibition", nullable = false)
     @Embedded
     private Exhibition exhibition;
-
-    @Column(name = "exhibition_image", nullable = false)
-    private String exhibitionImage;
 
     @Column(name = "open_chat_url", nullable = false)
     private String openChatUrl;
@@ -59,30 +58,27 @@ public class Post extends BaseEntity {
 
     @Builder
     public Post(final Member member, final String title, final String content
-            , final String exhibition, final String exhibitionImage
+            , final Exhibition exhibition
             , final String openChatUrl, final PostStatus postStatus) {
         this.member = member;
         this.title = new Title(title);
         this.content = new Content(content);
-        this.exhibition = new Exhibition(exhibition);
-        this.exhibitionImage = exhibitionImage;
+        this.exhibition = exhibition;
         this.openChatUrl = openChatUrl;
         this.postStatus = postStatus;
     }
 
-    public void change(final Member member, final String title, final String content
-            , final String exhibition, final String exhibitionImage
+    public void update(final String title, final String content
+            , final Exhibition exhibition
             , final String openChatUrl, final PostStatus postStatus) {
-        this.member = member;
         this.title = new Title(title);
         this.content = new Content(content);
-        this.exhibition = new Exhibition(exhibition);
-        this.exhibitionImage = exhibitionImage;
+        this.exhibition = exhibition;
         this.openChatUrl = openChatUrl;
         this.postStatus = postStatus;
     }
 
-    public boolean isMember(final Long accessMemberId) {
+    public boolean isWriter(final Long accessMemberId) {
         if (accessMemberId == null) {
             return false;
         }

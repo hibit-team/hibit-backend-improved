@@ -1,4 +1,4 @@
-package com.hibitbackendimproved.post.domain;
+package com.hibitbackendimproved.post.domain.vo;
 
 import com.hibitbackendimproved.post.exception.InvalidContentException;
 import jakarta.persistence.Column;

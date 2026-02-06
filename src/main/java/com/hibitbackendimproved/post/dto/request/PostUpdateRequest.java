@@ -12,19 +12,28 @@ public class PostUpdateRequest {
 
     private String title;
     private String content;
-    private String exhibition;
+
+    private String exhibitionTitle;
+    private String exhibitionLink;
     private String exhibitionImage;
+    private String exhibitionPlace;
+    private int exhibitionPrice;
+
     private String openChatUrl;
     private PostStatus postStatus;
 
     @Builder
-    public PostUpdateRequest(final String title, final String content
-            , final String exhibition, final String exhibitionImage
-            , final String openChatUrl, final PostStatus postStatus) {
+    public PostUpdateRequest(final String title, final String content,
+                             final String exhibitionTitle, final String exhibitionLink,
+                             final String exhibitionImage, final String exhibitionPlace, final int exhibitionPrice,
+                             final String openChatUrl, final PostStatus postStatus) {
         this.title = title;
         this.content = content;
-        this.exhibition = exhibition;
+        this.exhibitionTitle = exhibitionTitle;
+        this.exhibitionLink = exhibitionLink;
         this.exhibitionImage = exhibitionImage;
+        this.exhibitionPlace = exhibitionPlace;
+        this.exhibitionPrice = exhibitionPrice;
         this.openChatUrl = openChatUrl;
         this.postStatus = postStatus;
     }
@@ -33,8 +42,11 @@ public class PostUpdateRequest {
         return PostUpdateServiceRequest.builder()
                 .title(title)
                 .content(content)
-                .exhibition(exhibition)
+                .exhibitionTitle(exhibitionTitle)
+                .exhibitionLink(exhibitionLink)
                 .exhibitionImage(exhibitionImage)
+                .exhibitionPlace(exhibitionPlace)
+                .exhibitionPrice(exhibitionPrice)
                 .openChatUrl(openChatUrl)
                 .postStatus(postStatus)
                 .build();
