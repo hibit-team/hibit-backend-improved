@@ -20,10 +20,10 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-24.04
-    # env:
-      # KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-      # KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-      # JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+    env:
+      KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+      KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
     steps:
       - name: 레포지토리를 가져옵니다
         uses: actions/checkout@v3
@@ -46,23 +46,17 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle build를 수행합니다
-        # 이 단계가 실패해도 다음 단계로 넘어가며, 전체 job을 실패 처리하지 않음
-        continue-on-error: true
         run: ./gradlew build
 
       - name: 테스트 결과를 PR에 코멘트로 등록합니다.
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()  # 테스트가 실패하여도 Report를 보기 위해 `always`로 설정
-        continue-on-error: true
         with:
           files: '**/build/test-results/test/TEST-*.xml'
-          check_run_disabled: true
 
       - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다.
         uses: mikepenz/action-junit-report@v3
         if: always()
-        continue-on-error: true
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
           token: ${{ github.token }}
-          fail_on_failure: false
