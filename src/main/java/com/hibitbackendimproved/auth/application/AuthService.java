@@ -52,7 +52,7 @@ public class AuthService {
         final String oauthProviderName = oauthProvider.trim();
         log.info("oauth provider name: {}", oauthProviderName);
 
-        if (oauthUriProviders.containsKey(oauthProviderName)) {
+        if (!oauthUriProviders.containsKey(oauthProviderName)) {
             throw new ServerErrorOAuthException("제공된 OAuth Provider가 아닙니다.");
         }
         return oauthUriProviders.get(oauthProviderName).generate(redirectUri);
