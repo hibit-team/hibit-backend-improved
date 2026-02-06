@@ -29,9 +29,8 @@ class PostTest {
         Member 팬시 = 팬시();
 
         // when & then
-        assertDoesNotThrow(() -> new Post(팬시, 게시글제목1, 게시글내용1
-                , 전시회제목1, 전시관람인원1, 전시관람희망날짜1, 오픈채팅방Url1
-                , 함께하고싶은활동1, 게시글이미지1, 모집상태1));
+        assertDoesNotThrow(() -> new Post(팬시, 게시글제목, 게시글내용
+                , 전시회제목, 전시회이미지, 오픈채팅방Url, 모집상태));
     }
 
     @DisplayName("게시글을 작성한 회원 정보를 가져온다.")
@@ -57,15 +56,12 @@ class PostTest {
 
         // when & then
         assertAll(
-                () -> assertThat(post.getTitle()).isEqualTo(게시글제목2),
-                () -> assertThat(post.getContent()).isEqualTo(게시글내용2),
-                () -> assertThat(post.getExhibition()).isEqualTo(전시회제목2),
-                () -> assertThat(post.getExhibitionAttendance()).isEqualTo(전시관람인원2),
-                () -> assertThat(post.getPossibleTime()).isEqualTo(전시관람희망날짜2),
+                () -> assertThat(post.getTitle().getValue()).isEqualTo(게시글제목2),
+                () -> assertThat(post.getContent().getValue()).isEqualTo(게시글내용2),
+                () -> assertThat(post.getExhibition().getValue()).isEqualTo(전시회제목2),
+                () -> assertThat(post.getExhibitionImage()).isEqualTo(전시회이미지2),
                 () -> assertThat(post.getOpenChatUrl()).isEqualTo(오픈채팅방Url2),
-                () -> assertThat(post.getTogetherActivity()).isEqualTo(함께하고싶은활동2),
-                () -> assertThat(post.getPostStatus()).isEqualTo(모집상태2),
-                () -> assertThat(post.getImageName()).isEqualTo(게시글이미지2)
+                () -> assertThat(post.getPostStatus()).isEqualTo(모집상태2)
         );
     }
 
@@ -77,19 +73,16 @@ class PostTest {
         Post post = 프로젝트_해시테크(팬시);
 
         // when
-        post.change(팬시, 게시글제목2, 게시글내용2, 전시회제목2, 전시관람인원2, 전시관람희망날짜2, 오픈채팅방Url2, 함께하고싶은활동2, 게시글이미지2, 모집상태2);
+        post.change(팬시, 게시글제목2, 게시글내용2, 전시회제목2, 전시회이미지2, 오픈채팅방Url2, 모집상태2);
 
         // then
         assertAll(
-                () -> assertThat(post.getTitle()).isEqualTo(게시글제목2),
-                () -> assertThat(post.getContent()).isEqualTo(게시글내용2),
-                () -> assertThat(post.getExhibition()).isEqualTo(전시회제목2),
-                () -> assertThat(post.getExhibitionAttendance()).isEqualTo(전시관람인원2),
-                () -> assertThat(post.getPossibleTime()).isEqualTo(전시관람희망날짜2),
+                () -> assertThat(post.getTitle().getValue()).isEqualTo(게시글제목2),
+                () -> assertThat(post.getContent().getValue()).isEqualTo(게시글내용2),
+                () -> assertThat(post.getExhibition().getValue()).isEqualTo(전시회제목2),
+                () -> assertThat(post.getExhibitionImage()).isEqualTo(전시회이미지2),
                 () -> assertThat(post.getOpenChatUrl()).isEqualTo(오픈채팅방Url2),
-                () -> assertThat(post.getTogetherActivity()).isEqualTo(함께하고싶은활동2),
-                () -> assertThat(post.getPostStatus()).isEqualTo(모집상태2),
-                () -> assertThat(post.getImageName()).isEqualTo(게시글이미지2)
+                () -> assertThat(post.getPostStatus()).isEqualTo(모집상태2)
         );
     }
 }

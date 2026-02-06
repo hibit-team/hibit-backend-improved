@@ -1,7 +1,6 @@
 package com.hibitbackendimproved.profile.presentation;
 
 import com.hibitbackendimproved.ControllerTestSupport;
-import com.hibitbackendimproved.profile.domain.PersonalityType;
 import com.hibitbackendimproved.profile.dto.request.ProfileCreateRequest;
 import com.hibitbackendimproved.profile.dto.request.ProfileUpdateRequest;
 import com.hibitbackendimproved.profile.dto.response.ProfileResponse;
@@ -11,21 +10,29 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.*;
+import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.타인_프로필_조회_응답;
+import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.팬시_닉네임;
+import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.팬시_닉네임2;
+import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.팬시_이미지;
+import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.팬시_이미지2;
+import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.팬시_자기소개;
+import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.팬시_자기소개2;
+import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.팬시_프로필;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,44 +47,26 @@ class ProfileControllerTest extends ControllerTestSupport {
         // given
         ProfileCreateRequest request = ProfileCreateRequest.builder()
                 .nickname(팬시_닉네임)
-                .age(팬시_나이)
-                .gender(팬시_나이)
-                .personality(팬시_성격)
+                .profileImage(팬시_이미지)
                 .introduce(팬시_자기소개)
-                .imageName(팬시_이미지)
-                .job(팬시_직업)
-                .addressCity(팬시_사는도시)
-                .addressDistrict(팬시_사는지역)
-                .jobVisibility(직업_공개여부)
-                .addressVisibility(주소_공개여부)
-                .myImageVisibility(이미지_공개여부)
                 .build();
         // when & then
-        mockMvc.perform(post("/api/profiles/new")
+        mockMvc.perform(post("/api/v1/profile/new")
                         .header(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andDo(document("profiles/save/success",
+                .andDo(document("profile/save/success",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
                                 headerWithName("Authorization").description("JWT 토큰")),
                         requestFields(
                                 fieldWithPath("nickname").description("닉네임"),
-                                fieldWithPath("age").description("나이"),
-                                fieldWithPath("gender").description("성별"),
-                                fieldWithPath("personality").description("성격"),
-                                fieldWithPath("introduce").description("자기소개"),
-                                fieldWithPath("imageName").description("프로필 대표 이미지"),
-                                fieldWithPath("job").description("직업"),
-                                fieldWithPath("addressCity").description("시"),
-                                fieldWithPath("addressDistrict").description("구"),
-                                fieldWithPath("jobVisibility").description("직업 공개 여부"),
-                                fieldWithPath("addressVisibility").description("주소 공개 여부"),
-                                fieldWithPath("myImageVisibility").description("서브 이미지 공개 여부")
+                                fieldWithPath("profileImage").description("프로필 이미지"),
+                                fieldWithPath("introduce").description("자기소개")
                         )
                 ))
                 .andExpect(status().isCreated());
@@ -90,38 +79,18 @@ class ProfileControllerTest extends ControllerTestSupport {
         given(profileService.save(any(), any())).willThrow(new InvalidProfileAlreadyException());
 
         // when
-        mockMvc.perform(post("/api/profiles/new")
+        mockMvc.perform(post("/api/v1/profile/new")
                         .header(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(팬시_프로필()))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andDo(document("profiles/save/fail",
+                .andDo(document("profile/save/fail",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ))
                 .andExpect(status().isBadRequest());
-    }
-
-    @DisplayName("본인이 선택할 수 있는 성격 목록을 반환한다.")
-    @Test
-    void 본인이_선택할_수_있는_성격_목록을_반환한다() throws Exception {
-        // given
-        List<PersonalityType> requests = Arrays.asList(PersonalityType.values());
-
-        // when & then
-        mockMvc.perform(get("/api/profiles/personalities")
-                        .header(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_VALUE)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andDo(document("profiles/find/personalities/success",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())
-                ))
-                .andExpect(status().isOk());
     }
 
     @DisplayName("본인의 프로필을 조회한다.")
@@ -130,23 +99,14 @@ class ProfileControllerTest extends ControllerTestSupport {
         // given
         ProfileResponse response = ProfileResponse.builder()
                 .nickname(팬시_닉네임)
-                .age(팬시_나이)
-                .gender(팬시_성별)
-                .personality(팬시_성격)
+                .profileImage(팬시_이미지)
                 .introduce(팬시_자기소개)
-                .job(팬시_직업)
-                .addressCity(팬시_사는도시)
-                .addressDistrict(팬시_사는지역)
-                .imageName(팬시_이미지)
-                .jobVisibility(직업_공개여부)
-                .addressVisibility(주소_공개여부)
-                .myImageVisibility(이미지_공개여부)
                 .build();
 
         given(profileService.findMyProfile(any())).willReturn(response);
 
         // when & then
-        mockMvc.perform(get("/api/profiles/me")
+        mockMvc.perform(get("/api/v1/profile/me")
                         .header(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -167,13 +127,13 @@ class ProfileControllerTest extends ControllerTestSupport {
         given(profileService.findOtherProfile(any())).willReturn(타인_프로필_조회_응답());
 
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/profiles/other/{id}", 타인프로필_id)
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/v1/profile/other/{id}", 타인프로필_id)
                         .header(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andDo(document("profiles/find/other/one/success",
+                .andDo(document("profile/find/other/one/success",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -189,28 +149,19 @@ class ProfileControllerTest extends ControllerTestSupport {
         // given
         ProfileUpdateRequest request = ProfileUpdateRequest.builder()
                 .nickname(팬시_닉네임2)
-                .age(팬시_나이2)
-                .gender(팬시_성별2)
-                .personality(팬시_성격2)
+                .profileImage(팬시_이미지2)
                 .introduce(팬시_자기소개2)
-                .imageName(팬시_이미지2)
-                .job(팬시_직업2)
-                .addressCity(팬시_사는도시2)
-                .addressDistrict(팬시_사는지역2)
-                .jobVisibility(직업_공개여부)
-                .addressVisibility(주소_공개여부)
-                .myImageVisibility(이미지_공개여부)
                 .build();
 
         // when & then
-        mockMvc.perform(put("/api/profiles/me")
+        mockMvc.perform(put("/api/v1/profile/me")
                         .header(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andDo(document("profiles/update/me/success",
+                .andDo(document("profile/update/me/success",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ))

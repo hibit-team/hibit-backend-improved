@@ -10,62 +10,41 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Getter
-@Table(name = "members")
+@Table(name = "members", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_member_social_info", columnNames = {"social_id", "social_type"})
+})
 @Entity
 public class Member extends BaseEntity {
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-z0-9._-]+@[a-z]+[.]+[a-z]{2,3}$");
-    private static final int MAX_DISPLAY_NAME_LENGTH = 20;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @Column(name = "nickname", nullable = false)
-    private String nickname;
+    @Column(name = "social_id", nullable = false)
+    private String socialId;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "social_type", nullable = true)
+    @Column(name = "social_type", nullable = false)
     private SocialType socialType;
 
     protected Member() {
     }
 
     @Builder
-    public Member(final String email, final String nickname, final SocialType socialType) {
-        super();
-        validateEmail(email);
-        validateNickName(nickname);
-
-        this.email = email;
-        this.nickname = nickname;
+    public Member(final String socialId, final SocialType socialType) {
+        validateSocialId(socialId);
+        this.socialId = socialId;
         this.socialType = socialType;
     }
 
-    private void validateEmail(final String email) {
-        Matcher matcher = EMAIL_PATTERN.matcher(email);
-        if (!matcher.matches()) {
-            throw new InvalidMemberException("이메일 형식이 올바르지 않습니다.");
+    private void validateSocialId(final String socialId) {
+        if (socialId == null || socialId.isBlank()) {
+            throw new InvalidMemberException("소셜 ID 값이 존재해야 합니다.");
         }
-    }
-
-    private void validateNickName(final String nickname) {
-        if (nickname.isBlank() || nickname.length() > MAX_DISPLAY_NAME_LENGTH) {
-            throw new InvalidMemberException(String.format("이름은 1자 이상 20자 %d이하여야 합니다.", MAX_DISPLAY_NAME_LENGTH));
-        }
-    }
-
-    public void updateNickname(final String nickname) {
-        this.nickname = nickname;
     }
 }

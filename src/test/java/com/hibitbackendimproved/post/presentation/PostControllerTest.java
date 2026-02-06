@@ -14,12 +14,10 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.hibitbackendimproved.common.fixtures.MemberFixtures.팬시;
 import static com.hibitbackendimproved.common.fixtures.PostFixtures.*;
-import static com.hibitbackendimproved.post.dto.response.PostResponse.AttendanceAndTogetherActivity;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -43,9 +41,8 @@ class PostControllerTest extends ControllerTestSupport {
             .id(1L)
             .title("게시글 제목1")
             .exhibition("전시회 제목1")
-            .exhibitionAttendanceAndTogetherActivity(Arrays.asList("4인 관람", "맛집가기"))
+            .exhibitionImage("전시회 이미지1")
             .postStatus(PostStatus.HOLDING)
-            .imageName("게시글 이미지1")
             .createDateTime(LocalDateTime.now())
             .build();
 
@@ -53,9 +50,8 @@ class PostControllerTest extends ControllerTestSupport {
             .id(2L)
             .title("게시글 제목2")
             .exhibition("전시회 제목2")
-            .exhibitionAttendanceAndTogetherActivity(Arrays.asList("3인 관람", "만나서 정해요!"))
+            .exhibitionImage("전시회 이미지")
             .postStatus(PostStatus.HOLDING)
-            .imageName("게시글 이미지2")
             .createDateTime(LocalDateTime.now())
             .build();
 
@@ -64,17 +60,12 @@ class PostControllerTest extends ControllerTestSupport {
     void 신규_게시글을_등록한다() throws Exception {
         // given
         PostCreateRequest request = PostCreateRequest.builder()
-                .title(게시글제목1)
-                .content(게시글내용1)
-                .exhibition(전시회제목1)
-                .exhibitionAttendance(전시관람인원1)
-                .openChatUrl(오픈채팅방Url1)
-                .togetherActivity(함께하고싶은활동1)
-                .possibleTime(전시관람희망날짜1)
-                .openChatUrl(오픈채팅방Url1)
-                .togetherActivity(함께하고싶은활동1)
-                .imageName(게시글이미지1)
-                .postStatus(모집상태1)
+                .title(게시글제목)
+                .content(게시글내용)
+                .exhibition(전시회제목)
+                .exhibitionImage(전시회이미지)
+                .openChatUrl(오픈채팅방Url)
+                .postStatus(모집상태)
                 .build();
 
         given(postService.save(any(), any())).willReturn(프로필_등록_응답());
@@ -96,26 +87,19 @@ class PostControllerTest extends ControllerTestSupport {
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("게시글 내용"),
                                         fieldWithPath("exhibition").type(JsonFieldType.STRING).description("전시회 제목"),
-                                        fieldWithPath("exhibitionAttendance").type(JsonFieldType.NUMBER).description("참가할 모집 인원"),
-                                        fieldWithPath("possibleTime").type(JsonFieldType.STRING).description("관람 희망 날짜"),
+                                        fieldWithPath("exhibitionImage").type(JsonFieldType.STRING).description("전시회 이미지"),
                                         fieldWithPath("openChatUrl").type(JsonFieldType.STRING).description("오픈 채팅방 URL 주소"),
-                                        fieldWithPath("togetherActivity").type(JsonFieldType.STRING).optional().description("함께하고싶은 활동 타입(EAT | CAFE | ONLY | LATER)"),
-                                        fieldWithPath("imageName").type(JsonFieldType.STRING).description("게시글 이미지"),
                                         fieldWithPath("postStatus").type(JsonFieldType.STRING).optional().description("모집상태 타입(HOLDING | CANCELLED | COMPLETED)")),
                                 responseFields(
                                         fieldWithPath("meta.code").type(JsonFieldType.NUMBER).description("응답 코드"),
                                         fieldWithPath("meta.message").type(JsonFieldType.STRING).description("응답 메시지"),
                                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("게시글 ID"),
                                         fieldWithPath("data.writerId").type(JsonFieldType.NUMBER).description("로그인한 사용자 ID"),
-                                        fieldWithPath("data.writerName").type(JsonFieldType.STRING).description("로그인한 사용자 닉네임"),
                                         fieldWithPath("data.title").type(JsonFieldType.STRING).description("게시글 제목"),
                                         fieldWithPath("data.content").type(JsonFieldType.STRING).description("게시글 내용"),
                                         fieldWithPath("data.exhibition").type(JsonFieldType.STRING).description("전시회 제목"),
-                                        fieldWithPath("data.exhibitionAttendanceAndTogetherActivity").type(JsonFieldType.ARRAY).description("[ \"3인 관람\", \"맛집 가기\" ]"),
-                                        fieldWithPath("data.possibleTime").type(JsonFieldType.STRING).description("관람 희망 날짜"),
+                                        fieldWithPath("data.exhibitionImage").type(JsonFieldType.STRING).description("전시회 이미지"),
                                         fieldWithPath("data.openChatUrl").type(JsonFieldType.STRING).description("오픈 채팅방 URL 주소"),
-                                        fieldWithPath("data.togetherActivity").type(JsonFieldType.STRING).optional().description("함께하고싶은 활동 타입(EAT | CAFE | ONLY | LATER)"),
-                                        fieldWithPath("data.imageName").type(JsonFieldType.STRING).description("게시글 이미지"),
                                         fieldWithPath("data.postStatus").type(JsonFieldType.STRING).optional().description("모집상태 타입(HOLDING | CANCELLED | COMPLETED)"),
                                         fieldWithPath("data.viewCount").type(JsonFieldType.NUMBER).description("게시글 조회수"))
                         )
@@ -158,15 +142,12 @@ class PostControllerTest extends ControllerTestSupport {
         PostDetailResponse response = PostDetailResponse.builder()
                 .id(postId)
                 .writerId(팬시.getId())
-                .writerName(팬시.getNickname())
-                .title(게시글제목1)
-                .content(게시글내용1)
-                .exhibition(전시회제목1)
-                .exhibitionAttendanceAndTogetherActivity(AttendanceAndTogetherActivity(전시관람인원1, 함께하고싶은활동1))
-                .possibleTime(전시관람희망날짜1)
-                .openChatUrl(오픈채팅방Url1)
-                .postStatus(모집상태1)
-                .imageName(게시글이미지1)
+                .title(게시글제목)
+                .content(게시글내용)
+                .exhibition(전시회제목)
+                .exhibitionImage(전시회이미지)
+                .openChatUrl(오픈채팅방Url)
+                .postStatus(모집상태)
                 .build();
 
         // when
@@ -291,11 +272,8 @@ class PostControllerTest extends ControllerTestSupport {
                 .title(게시글제목2)
                 .content(게시글내용2)
                 .exhibition(전시회제목2)
-                .exhibitionAttendance(전시관람인원2)
-                .possibleTime(전시관람희망날짜2)
+                .exhibitionImage(전시회이미지2)
                 .openChatUrl(오픈채팅방Url2)
-                .togetherActivity(함께하고싶은활동2)
-                .imageName(게시글이미지2)
                 .postStatus(모집상태2)
                 .build();
 

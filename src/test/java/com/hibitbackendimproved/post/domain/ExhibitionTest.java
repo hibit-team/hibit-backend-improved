@@ -30,7 +30,7 @@ class ExhibitionTest {
         Exhibition exhibition = new Exhibition(value);
 
         // when
-        String actual = exhibition.getTitle();
+        String actual = exhibition.getValue();
 
         // then
         assertThat(actual).hasSizeBetween(1, 30);

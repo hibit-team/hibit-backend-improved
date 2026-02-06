@@ -88,7 +88,7 @@ public class PostService {
         if (posts.isEmpty()) {
             throw new NotFoundPostException();
         }
-        return posts.get(0);
+        return posts.getFirst();
     }
 
     public PostsCountResponse countPostWithQuery(final String query) {
@@ -113,8 +113,8 @@ public class PostService {
         Post post = findPostObject(postId);
         validateProductMembership(memberId, post);
 
-        post.change(member, request.getTitle(), request.getContent(), request.getExhibition(), request.getExhibitionAttendance(), request.getPossibleTime(), request.getOpenChatUrl(),
-                request.getTogetherActivity(), request.getImageName(), request.getPostStatus());
+        post.change(member, request.getTitle(), request.getContent(), request.getExhibition(), request.getExhibitionImage()
+                , request.getOpenChatUrl(), request.getPostStatus());
     }
 
     @Transactional

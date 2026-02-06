@@ -10,7 +10,6 @@ import com.hibitbackendimproved.profile.dto.response.ProfileOtherResponse;
 import com.hibitbackendimproved.profile.dto.response.ProfileResponse;
 import com.hibitbackendimproved.profile.exception.NotFoundProfileException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,9 +36,8 @@ class ProfileServiceTest extends IntegrationTestSupport {
         memberRepository.deleteAllInBatch();
     }
 
-    @DisplayName("프로필을 등록한다.")
     @Test
-    void 프로필을_등록한다()  {
+    void 프로필을_등록한다() {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
@@ -47,17 +45,8 @@ class ProfileServiceTest extends IntegrationTestSupport {
 
         ProfileCreateRequest request = ProfileCreateRequest.builder()
                 .nickname("devFancy")
-                .age(28)
-                .gender(0)
-                .personality(PersonalityType.TYPE_1)
+                .profileImage("image.png")
                 .introduce("안녕하세요 개발자 팬시입니다.")
-                .imageName("image.png")
-                .job("개발자")
-                .addressCity(AddressCity.SEOUL)
-                .addressDistrict(AddressDistrict.SEOUL_GANGNAM)
-                .jobVisibility(true)
-                .addressVisibility(false)
-                .myImageVisibility(false)
                 .build();
 
         // when
@@ -70,7 +59,6 @@ class ProfileServiceTest extends IntegrationTestSupport {
         assertEquals("devFancy", savedProfile.getNickname());
     }
 
-    @DisplayName("본인의 프로필을 조회한다.")
     @Test
     void 본인의_프로필을_조회한다() {
         // given
@@ -87,16 +75,11 @@ class ProfileServiceTest extends IntegrationTestSupport {
         // then
         assertAll(
                 () -> assertThat(response.getNickname()).isEqualTo(profile.getNickname()),
-                () -> assertThat(response.getAge()).isEqualTo(profile.getAge()),
-                () -> assertThat(response.getGender()).isEqualTo(profile.getGender()),
-                () -> assertThat(response.getPersonality()).isEqualTo(profile.getPersonality()),
-                () -> assertThat(response.getIntroduce()).isEqualTo(profile.getIntroduce()),
-                () -> assertThat(response.getJob()).isEqualTo(profile.getJob())
+                () -> assertThat(response.getProfileImage()).isEqualTo(profile.getProfileImage()),
+                () -> assertThat(response.getIntroduce()).isEqualTo(profile.getIntroduce())
         );
-
     }
 
-    @DisplayName("존재하지 않는 프로필을 조회하면 예외가 발생한다")
     @Test
     void 존재하지_않는_프로필을_조회하면_예외가_발생한다() {
         // given
@@ -107,7 +90,6 @@ class ProfileServiceTest extends IntegrationTestSupport {
                 .isInstanceOf(NotFoundProfileException.class);
     }
 
-    @DisplayName("본인의 프로필을 수정한다.")
     @Test
     void 본인의_프로필을_수정한다() {
         // given
@@ -121,17 +103,8 @@ class ProfileServiceTest extends IntegrationTestSupport {
         // when
         ProfileUpdateRequest request = ProfileUpdateRequest.builder()
                 .nickname("devFancy2")
-                .age(29)
-                .gender(1)
-                .personality(PersonalityType.TYPE_1)
+                .profileImage("image2.png")
                 .introduce("안녕하세요 서버 개발자로 살아가는 팬시입니다.")
-                .imageName("image2.png")
-                .job("서버 개발자")
-                .addressCity(AddressCity.SEOUL)
-                .addressDistrict(AddressDistrict.SEOUL_GANGNAM)
-                .jobVisibility(true)
-                .addressVisibility(false)
-                .myImageVisibility(false)
                 .build();
 
         profileService.update(memberId, request);
@@ -139,19 +112,21 @@ class ProfileServiceTest extends IntegrationTestSupport {
 
         // then
         assertAll(
-                () -> assertThat(updatedProfile.getNickname()).isEqualTo(request.getNickname()),
-                () -> assertThat(updatedProfile.getAge()).isEqualTo(request.getAge()),
-                () -> assertThat(updatedProfile.getGender()).isEqualTo(request.getGender()),
-                () -> assertThat(updatedProfile.getPersonality()).isEqualTo(request.getPersonality()),
-                () -> assertThat(updatedProfile.getIntroduce()).isEqualTo(request.getIntroduce()),
-                () -> assertThat(updatedProfile.getImageName()).isEqualTo(request.getImageName()),
-                () -> assertThat(updatedProfile.getJob()).isEqualTo(request.getJob()),
-                () -> assertThat(updatedProfile.getAddressCity()).isEqualTo(request.getAddressCity()),
-                () -> assertThat(updatedProfile.getAddressDistrict()).isEqualTo(request.getAddressDistrict())
+                () -> {
+                    assertNotNull(updatedProfile);
+                    assertThat(updatedProfile.getNickname()).isEqualTo(request.getNickname());
+                },
+                () -> {
+                    assertNotNull(updatedProfile);
+                    assertThat(updatedProfile.getProfileImage()).isEqualTo(request.getProfileImage());
+                },
+                () -> {
+                    assertNotNull(updatedProfile);
+                    assertThat(updatedProfile.getIntroduce()).isEqualTo(request.getIntroduce());
+                }
         );
     }
 
-    @DisplayName("타인의 프로필 정보를 조회한다.")
     @Test
     void 타인의_프로필_정보를_조회한다() {
         // given
@@ -167,5 +142,5 @@ class ProfileServiceTest extends IntegrationTestSupport {
 
         // then
         assertNotNull(response);
-     }
+    }
 }

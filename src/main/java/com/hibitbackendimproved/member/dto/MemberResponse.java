@@ -8,21 +8,19 @@ import lombok.Getter;
 @Getter
 public class MemberResponse {
     private Long id;
-    private String email;
-    private String displayName;
+    private String socialId;
     private SocialType socialType;
 
     private MemberResponse() {
     }
 
-    public MemberResponse(final Long id, final String email, final String displayName, final SocialType socialType) {
+    public MemberResponse(final Long id, final String socialId, final SocialType socialType) {
         this.id = id;
-        this.email = email;
-        this.displayName = displayName;
+        this.socialId = socialId;
         this.socialType = socialType;
     }
 
     public MemberResponse(final Member member) {
-        this(member.getId(), member.getEmail(), member.getNickname(), member.getSocialType());
+        this(member.getId(), member.getSocialId(), member.getSocialType());
     }
 }

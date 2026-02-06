@@ -22,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.hibitbackendimproved.common.fixtures.MemberFixtures.팬시;
-import static com.hibitbackendimproved.common.fixtures.PostFixtures.*;
+import static com.hibitbackendimproved.common.fixtures.PostFixtures.오스틴리_전시회;
+import static com.hibitbackendimproved.common.fixtures.PostFixtures.프로젝트_해시테크;
 import static com.hibitbackendimproved.common.fixtures.ProfileFixtures.팬시_프로필;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -46,29 +47,22 @@ class PostRepositoryTest extends IntegrationTestSupport {
 
     private Member member;
 
-    private Profile profile;
-
-    private Post post0;
-    private Post post1;
-    private Post post2;
-
     @BeforeEach
     void setUp() {
         member = 팬시();
         memberRepository.save(member);
-        profile = 팬시_프로필(member);
+        Profile profile = 팬시_프로필(member);
         profileRepository.save(profile);
-        post0 = 오스틴리_전시회(member);
-        post1 = 프로젝트_해시테크(member);
-        post2 = 프로젝트_해시테크_2(member);
-        postRepository.saveAll(List.of(post0, post1, post2));
     }
 
     @DisplayName("게시글과 회원 테이블이 정상적으로 매핑이 된다.")
     @Test
     void 게시글과_회원_테이블이_정상적으로_매핑이_된다() {
         // given
-        Post foundPost = postRepository.findById(post1.getId())
+        final Post post = createPost(프로젝트_해시테크(member));
+
+        // when
+        Post foundPost = postRepository.findById(post.getId())
                 .orElseThrow(NotFoundPostException::new);
 
         // when & then
@@ -79,15 +73,18 @@ class PostRepositoryTest extends IntegrationTestSupport {
     @Test
     void findAllByOrderByCreatedDateTimeDesc() {
         // given
+        final Post post1 = createPost(프로젝트_해시테크(member));
+        final Post post2 = createPost(오스틴리_전시회(member));
+
+        // when
         List<Post> posts = postRepository.findAllByOrderByCreatedDateTimeDesc();
 
-        // when & then
-        assertThat(posts)
-                .extracting(Post::getTitle, Post::getContent)
+        //  then
+        assertThat(posts).hasSize(2)
+                .extracting(p -> p.getTitle().getValue(), p -> p.getContent().getValue())
                 .containsExactly(
-                        tuple(posts.get(0).getTitle(), posts.get(0).getContent()),
-                        tuple(posts.get(1).getTitle(), posts.get(1).getContent()),
-                        tuple(posts.get(2).getTitle(), posts.get(2).getContent())
+                        tuple(post2.getTitle().getValue(), post2.getContent().getValue()),
+                        tuple(post1.getTitle().getValue(), post1.getContent().getValue())
                 );
     }
 
@@ -95,12 +92,15 @@ class PostRepositoryTest extends IntegrationTestSupport {
     @Test
     void updateViewCount() {
         // given
-        int initViewCount = postRepository.findById(post1.getId()).get().getViewCount();
-        postRepository.updateViewCount(post1.getId());
+        Post post = createPost(프로젝트_해시테크(member));
+        int initViewCount = post.getViewCount();
+
+        // when
+        postRepository.updateViewCount(post.getId());
         em.clear();
-        int viewCount = postRepository.findById(post1.getId()).get().getViewCount();
 
         // when & then
+        int viewCount = postRepository.findById(post.getId()).get().getViewCount();
         assertThat(initViewCount + 1).isEqualTo(viewCount);
     }
 
@@ -108,20 +108,36 @@ class PostRepositoryTest extends IntegrationTestSupport {
     @Test
     void findPostPagesByQuery() {
         // given
-        Page<Post> result = postRepository.findPostPagesByQuery(PageRequest.of(0, 3, DESC, "created_at"), "");
+        createPost(프로젝트_해시테크(member));
+        createPost(오스틴리_전시회(member));
+
+        // when
+        Page<Post> result = postRepository.findPostPagesByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
 
         // when & then
-        assertThat(result.getTotalElements()).isEqualTo(3L);
+        assertThat(result.getTotalElements()).isEqualTo(2L);
     }
 
     @DisplayName("특정 쿼리에 부합하는 게시글을 최신순으로 가져온다.")
     @Test
     void findPostSlicePageByQuery() {
         // given
+        Post post1 = createPost(프로젝트_해시테크(member));
+        Post post2 = createPost(오스틴리_전시회(member));
+        Post post3 = createPost(프로젝트_해시테크(member));
+
+        // when
         Slice<Post> result = postRepository.findPostSlicePageByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
 
         // when & then
-        assertThat(result.getContent()).containsExactly(post2, post1);
-        assertThat(result.isLast()).isEqualTo(false);
+        assertThat(result.getContent())
+                .extracting(Post::getId)
+                .containsExactly(post3.getId(), post2.getId());
+        assertThat(result.hasNext()).isTrue(); // 다음 페이지 존재함(true)
+        assertThat(result.isLast()).isEqualTo(false); // 다음 페이지가 있으므로 마지막 페이지가 아님(false)
+    }
+
+    private Post createPost(final Post post) {
+        return postRepository.save(post);
     }
 }

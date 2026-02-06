@@ -87,14 +87,12 @@ class PostServiceTest extends IntegrationTestSupport {
         // then
         assertThat(response.getTitle()).isNotNull();
         assertAll(
-                () -> assertEquals(request.getTitle(), actual.getTitle()),
-                () -> assertEquals(request.getContent(), actual.getContent()),
-                () -> assertEquals(request.getExhibition(), actual.getExhibition()),
-                () -> assertEquals(request.getExhibitionAttendance(), actual.getExhibitionAttendance()),
-                () -> assertEquals(request.getPossibleTime(), actual.getPossibleTime()),
+                () -> assertEquals(request.getTitle(), actual.getTitle().getValue()),
+                () -> assertEquals(request.getContent(), actual.getContent().getValue()),
+                () -> assertEquals(request.getExhibition(), actual.getExhibition().getValue()),
+                () -> assertEquals(request.getExhibitionImage(), actual.getExhibitionImage()),
                 () -> assertEquals(request.getOpenChatUrl(), actual.getOpenChatUrl()),
-                () -> assertEquals(request.getTogetherActivity(), actual.getTogetherActivity()),
-                () -> assertEquals(request.getImageName(), actual.getImageName())
+                () -> assertEquals(request.getPostStatus(), actual.getPostStatus())
         );
     }
 
@@ -120,10 +118,9 @@ class PostServiceTest extends IntegrationTestSupport {
         assertAll(
                 () -> assertThat(response.getId()).isEqualTo(post.getId()),
                 () -> assertThat(response.getWriterId()).isEqualTo(post.getMember().getId()),
-                () -> assertThat(response.getWriterName()).isEqualTo(post.getMember().getNickname()),
-                () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
-                () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
-                () -> assertThat(response.getExhibition()).isEqualTo(post.getExhibition())
+                () -> assertThat(response.getTitle()).isEqualTo(post.getTitle().getValue()),
+                () -> assertThat(response.getContent()).isEqualTo(post.getContent().getValue()),
+                () -> assertThat(response.getExhibition()).isEqualTo(post.getExhibition().getValue())
         );
     }
 
@@ -221,34 +218,6 @@ class PostServiceTest extends IntegrationTestSupport {
         );
     }
 
-    @DisplayName("주어진 쿼리로 여러 개의 게시글을 검색할 수 있다. ")
-    @Test
-    void 주어진_쿼키로_여러_개의_게시글을_검색할_수_있다() {
-        // given
-        Member 팬시 = 팬시();
-        memberRepository.save(팬시);
-        Member member = memberRepository.getByIdOrThrow(팬시.getId());
-
-        Profile 팬시_프로필 = 팬시_프로필(member);
-        Profile profile = profileRepository.save(팬시_프로필);
-        memberRepository.save(팬시);
-
-        Post 게시글_1 = 프로젝트_해시테크(profile.getMember());
-        Post 게시글_2 = 프로젝트_해시테크_2(profile.getMember());
-        postRepository.saveAll(List.of(게시글_1, 게시글_2));
-
-        // when
-        PostsSliceResponse response = postService.searchSlickWithQuery("프로젝트",
-                PageRequest.of(0, 3, DESC, "created_at"));
-
-        // then
-        assertAll(
-                () -> assertThat(response.getPosts()).usingRecursiveComparison()
-                        .comparingOnlyFields("title", "content")
-                        .isEqualTo(List.of(PostResponse.from(게시글_2), PostResponse.from(게시글_1)))
-        );
-    }
-
     @DisplayName("주어진 쿼리로 제목과 본문 안에서 검색이 가능하다.")
     @Test
     void 주어진_쿼리로_제목과_본문_안에서_검색이_가능하다() {
@@ -258,26 +227,25 @@ class PostServiceTest extends IntegrationTestSupport {
         Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
-        Profile profile = profileRepository.save(팬시_프로필);
-        memberRepository.save(팬시);
+        profileRepository.save(팬시_프로필);
 
-        Post post1 = 프로젝트_해시테크(profile.getMember());
-        Post post2 = 프로젝트_해시테크_2(profile.getMember());
-        Post post3 = 오스틴리_전시회(profile.getMember());
-        postRepository.saveAll(List.of(post1, post2, post3));
+        Post post1 = 프로젝트_해시테크(member);
+        Post post2 = 오스틴리_전시회(member);
+        postRepository.saveAll(List.of(post1, post2));
 
         String query = "프로젝트";
+
         // when
         PostsSliceResponse myPosts = postService.searchSlickWithQuery(query,
-                PageRequest.of(0, 3, DESC, "created_at"));
+                PageRequest.of(0, 2, DESC, "created_at"));
         PostsCountResponse response = postService.countPostWithQuery(query);
 
         // then
         assertAll(
                 () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()
                         .comparingOnlyFields("title", "content")
-                        .isEqualTo(List.of(PostResponse.from(post1), PostResponse.from(post2))),
-                () -> assertThat(response.getTotalPostCount()).isEqualTo(2)
+                        .isEqualTo(List.of(PostResponse.from(post1))),
+                () -> assertThat(response.getTotalPostCount()).isEqualTo(1)
         );
     }
 
@@ -295,19 +263,18 @@ class PostServiceTest extends IntegrationTestSupport {
         memberRepository.save(팬시);
 
         Post post1 = 프로젝트_해시테크(profile.getMember());
-        Post post2 = 프로젝트_해시테크_2(profile.getMember());
-        Post post3 = 오스틴리_전시회(profile.getMember());
-        postRepository.saveAll(List.of(post1, post2, post3));
+        Post post2 = 오스틴리_전시회(profile.getMember());
+        postRepository.saveAll(List.of(post1, post2));
 
         // when
         PostsSliceResponse myPosts = postService.searchSlickWithQuery(query,
-                PageRequest.of(0, 3, DESC, "created_at"));
+                PageRequest.of(0, 2, DESC, "created_at"));
         PostsCountResponse response = postService.countPostWithQuery(query);
 
         // then
         assertAll(
                 () -> assertThat(myPosts.isLastPage()).isEqualTo(true),
-                () -> assertThat(response.getTotalPostCount()).isEqualTo(3)
+                () -> assertThat(response.getTotalPostCount()).isEqualTo(2)
         );
     }
 
@@ -324,18 +291,15 @@ class PostServiceTest extends IntegrationTestSupport {
 
         // when
         postService.update(팬시.getId(), savedPostId, request);
-        
+
         // then
         Post updatedPost = postRepository.findById(savedPostId).orElseThrow(() -> new NotFoundPostException());
-        assertAll( // 모집중은 동일하고, 나머지는 다름
-                () -> assertThat(updatedPost.getTitle()).isEqualTo(request.getTitle()),
-                () -> assertThat(updatedPost.getContent()).isEqualTo(request.getContent()),
-                () -> assertThat(updatedPost.getExhibition()).isEqualTo(request.getExhibition()),
-                () -> assertThat(updatedPost.getExhibitionAttendance()).isEqualTo(request.getExhibitionAttendance()),
-                () -> assertThat(updatedPost.getPossibleTime()).isEqualTo(request.getPossibleTime()),
+        assertAll(
+                () -> assertThat(updatedPost.getTitle().getValue()).isEqualTo(request.getTitle()),
+                () -> assertThat(updatedPost.getContent().getValue()).isEqualTo(request.getContent()),
+                () -> assertThat(updatedPost.getExhibition().getValue()).isEqualTo(request.getExhibition()),
+                () -> assertThat(updatedPost.getExhibitionImage()).isEqualTo(request.getExhibitionImage()),
                 () -> assertThat(updatedPost.getOpenChatUrl()).isEqualTo(request.getOpenChatUrl()),
-                () -> assertThat(updatedPost.getTogetherActivity()).isEqualTo(request.getTogetherActivity()),
-                () -> assertThat(updatedPost.getImageName()).isEqualTo(request.getImageName()),
                 () -> assertThat(updatedPost.getPostStatus()).isEqualTo(request.getPostStatus())
         );
     }
@@ -361,19 +325,16 @@ class PostServiceTest extends IntegrationTestSupport {
         // then
         Optional<Post> foundPost = postRepository.findById(savedPostId);
         assertThat(foundPost).isEmpty();
-     }
+    }
 
     private static PostCreateRequest getPostCreateRequest() {
         PostCreateRequest request = PostCreateRequest.builder()
-                .title(게시글제목1)
-                .content(게시글내용1)
-                .exhibition(전시회제목1)
-                .exhibitionAttendance(전시관람인원1)
-                .possibleTime(전시관람희망날짜1)
-                .openChatUrl(오픈채팅방Url1)
-                .togetherActivity(함께하고싶은활동1)
-                .imageName(게시글이미지1)
-                .postStatus(모집상태1)
+                .title(게시글제목)
+                .content(게시글내용)
+                .exhibition(전시회제목)
+                .exhibitionImage(전시회이미지)
+                .openChatUrl(오픈채팅방Url)
+                .postStatus(모집상태)
                 .build();
         return request;
     }
@@ -383,11 +344,8 @@ class PostServiceTest extends IntegrationTestSupport {
                 .title(게시글제목2)
                 .content(게시글내용2)
                 .exhibition(전시회제목2)
-                .exhibitionAttendance(전시관람인원2)
-                .possibleTime(전시관람희망날짜2)
+                .exhibitionImage(전시회이미지2)
                 .openChatUrl(오픈채팅방Url2)
-                .togetherActivity(함께하고싶은활동2)
-                .imageName(게시글이미지2)
                 .postStatus(모집상태2)
                 .build();
         return request;

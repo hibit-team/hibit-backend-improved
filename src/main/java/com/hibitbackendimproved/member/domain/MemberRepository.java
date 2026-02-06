@@ -7,17 +7,17 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByEmail(final String email);
+    Optional<Member> findBySocialId(final String email);
 
     default Member getByIdOrThrow(final Long id) {
         return findById(id)
                 .orElseThrow(NotFoundMemberException::new);
     }
 
-    boolean existsByEmail(final String email);
+    boolean existsBySocialId(final String email);
 
-    default Member getByEmailOrThrow(final String email) {
-        return findByEmail(email)
+    default Member getBySocialIdOrThrow(final String socialId) {
+        return findBySocialId(socialId)
                 .orElseThrow(NotFoundMemberException::new);
     }
 
