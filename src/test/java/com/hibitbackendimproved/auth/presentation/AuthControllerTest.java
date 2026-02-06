@@ -2,21 +2,22 @@ package com.hibitbackendimproved.auth.presentation;
 
 import com.hibitbackendimproved.ControllerTestSupport;
 import com.hibitbackendimproved.auth.dto.LoginMember;
+import com.hibitbackendimproved.auth.dto.OAuthMember;
 import com.hibitbackendimproved.auth.exception.InvalidTokenException;
-import com.hibitbackendimproved.infrastructure.oauth.exception.OAuthException;
+import com.hibitbackendimproved.auth.exception.OAuthException;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-import javax.servlet.http.Cookie;
-
 import static com.hibitbackendimproved.common.AuthFixtures.*;
 import static com.hibitbackendimproved.common.fixtures.MemberFixtures.FANCY_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -34,19 +35,19 @@ class AuthControllerTest extends ControllerTestSupport {
     @Test
     void OAuth_소셜_로그인을_위한_링크와_상태코드_200을_반환한다() throws Exception {
         // given
-        given(oAuthUri.generate(any())).willReturn(OAuth_로그인_링크);
+        given(authService.generateOAuthUri(any(), any())).willReturn(OAuth_로그인_링크);
 
         // when & then
-        mockMvc.perform(get("/api/auth/{oauthProvider}/oauth-uri?redirectUri={redirectUri}", GOOGLE_PROVIDER,
+        mockMvc.perform(get("/api/v1/auth/{oauthProvider}/oauth-uri?redirectUri={redirectUri}", KAKAO_PROVIDER,
                         "https://hibit.com/oauth"))
                 .andDo(print())
                 .andDo(document("auth/generate/redirectUri/success",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("oauthProvider").description("OAuth 로그인 제공자 (GOOGLE)")
+                                parameterWithName("oauthProvider").description("OAuth 로그인 제공자 (KAKAO)")
                         ),
-                        requestParameters(
+                        queryParameters(
                                 parameterWithName("redirectUri").description("OAuth Redirect URI")
                         ),
                         responseFields(
@@ -62,10 +63,11 @@ class AuthControllerTest extends ControllerTestSupport {
     @Test
     void OAuth_구글_로그인을_하면_accessToken과_refreshToken_값과_상태코드_200을_반환한다() throws Exception {
         // given
+        given(authService.handleOAuth(any(), any(), any())).willReturn(mock(OAuthMember.class));
         given(authService.generateAccessAndRefreshToken(any())).willReturn(MEMBER_인증_코드_토큰_응답());
 
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/auth/{oauthProvider}/token", OAUTH_PROVIDER)
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/{oauthProvider}/token", OAUTH_PROVIDER)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(MEMBER_인증_코드_토큰_요청())))
@@ -74,7 +76,7 @@ class AuthControllerTest extends ControllerTestSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("oauthProvider").description("OAuth 로그인 제공자(GOOGLE)")
+                                parameterWithName("oauthProvider").description("OAuth 로그인 제공자(KAKAO)")
                         ),
                         requestFields(
                                 fieldWithPath("code").type(JsonFieldType.STRING).description("OAuth 로그인 인증 코드"),
@@ -85,8 +87,7 @@ class AuthControllerTest extends ControllerTestSupport {
                                 fieldWithPath("meta.code").type(JsonFieldType.NUMBER).description("응답 코드"),
                                 fieldWithPath("meta.message").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("히빗 Access Token"),
-                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("히빗 Refresh Token"),
-                                fieldWithPath("data.isProfileRegistered").type(JsonFieldType.NUMBER).description("프로필 등록 여부")
+                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("히빗 Refresh Token")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -96,10 +97,9 @@ class AuthControllerTest extends ControllerTestSupport {
     @Test
     void OAuth_로그인_과정에서_Resource_Server_에러가_발생하면_상태코드_500을_반환한다() throws Exception {
         // given
-        given(authService.generateAccessAndRefreshToken(any())).willThrow(new OAuthException());
-
+        given(authService.handleOAuth(any(), any(), any())).willThrow(new OAuthException("Oauth 서버와의 통신 과정에서 문제가 발생했습니다."));
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/auth/{oauthProvider}/token", OAUTH_PROVIDER)
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/{oauthProvider}/token", OAUTH_PROVIDER)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(MEMBER_인증_코드_토큰_요청())))
@@ -108,7 +108,7 @@ class AuthControllerTest extends ControllerTestSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("oauthProvider").description("OAuth 로그인 제공자(GOOGLE)")
+                                parameterWithName("oauthProvider").description("OAuth 로그인 제공자(KAKAO)")
                         ),
                         requestFields(
                                 fieldWithPath("code").type(JsonFieldType.STRING).description("OAuth 로그인 인증 코드"),
@@ -126,7 +126,7 @@ class AuthControllerTest extends ControllerTestSupport {
         given(authService.generateAccessToken(any())).willReturn(MEMBER_리뉴얼_토큰_응답());
 
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/auth/token/access")
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/token/access")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .cookie(new Cookie("refreshToken", "ccccc.bbbbb.aaaaa")))
@@ -145,7 +145,7 @@ class AuthControllerTest extends ControllerTestSupport {
         given(authService.generateAccessToken(any())).willThrow(new InvalidTokenException());
 
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/auth/token/access")
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/token/access")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .cookie(new Cookie("refreshToken", "ccccc.bbbbb.aaaaa")))
@@ -165,7 +165,7 @@ class AuthControllerTest extends ControllerTestSupport {
         willDoNothing().given(authService).deleteToken(loginMember.getId());
 
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/auth/logout")
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/logout")
                         .header(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)

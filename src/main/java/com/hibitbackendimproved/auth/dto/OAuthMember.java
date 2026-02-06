@@ -8,14 +8,21 @@ public class OAuthMember {
 
     private final String email;
 
-    private final String displayName;
-
+    private final String nickname;
+    private SocialType socialType;
     private final String refreshToken;
+    private final boolean deleted = false;
 
-
-    public OAuthMember(String email, String displayName, String refreshToken) {
+    public OAuthMember(final String email, final String nickname, final String refreshToken) {
         this.email = email;
-        this.displayName = displayName;
+        this.nickname = nickname;
+        this.refreshToken = refreshToken;
+    }
+
+    public OAuthMember(final String email, final String nickname, final SocialType socialType, final String refreshToken) {
+        this.email = email;
+        this.nickname = nickname;
+        this.socialType = socialType;
         this.refreshToken = refreshToken;
     }
 
@@ -23,8 +30,8 @@ public class OAuthMember {
         return email;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getRefreshToken() {
@@ -32,7 +39,7 @@ public class OAuthMember {
     }
 
     public Member toMember() {
-        return new Member(email, displayName, SocialType.GOOGLE);
+        return new Member(email, nickname, socialType);
     }
 
 }

@@ -4,13 +4,26 @@ import com.hibitbackendimproved.auth.exception.EmptyAuthorizationHeaderException
 import com.hibitbackendimproved.auth.exception.InvalidTokenException;
 import com.hibitbackendimproved.auth.exception.NotFoundOAuthTokenException;
 import com.hibitbackendimproved.auth.exception.NotFoundTokenException;
-import com.hibitbackendimproved.support.error.dto.ErrorReportRequest;
-import com.hibitbackendimproved.support.error.dto.ErrorResponse;
-import com.hibitbackendimproved.infrastructure.oauth.exception.OAuthException;
+import com.hibitbackendimproved.auth.exception.OAuthException;
 import com.hibitbackendimproved.member.exception.InvalidMemberException;
 import com.hibitbackendimproved.member.exception.NotFoundMemberException;
-import com.hibitbackendimproved.post.exception.*;
-import com.hibitbackendimproved.profile.exception.*;
+import com.hibitbackendimproved.post.exception.InvalidContentException;
+import com.hibitbackendimproved.post.exception.InvalidExhibitionException;
+import com.hibitbackendimproved.post.exception.InvalidTitleException;
+import com.hibitbackendimproved.post.exception.NotFoundImageFileException;
+import com.hibitbackendimproved.post.exception.NotFoundPostStatusException;
+import com.hibitbackendimproved.post.exception.NotFoundTogetherActivityException;
+import com.hibitbackendimproved.profile.exception.InvalidIntroduceException;
+import com.hibitbackendimproved.profile.exception.InvalidNicknameException;
+import com.hibitbackendimproved.profile.exception.InvalidProfileAlreadyException;
+import com.hibitbackendimproved.profile.exception.NicknameAlreadyTakenException;
+import com.hibitbackendimproved.profile.exception.NotFoundAddressCityException;
+import com.hibitbackendimproved.profile.exception.NotFoundAddressDistrictException;
+import com.hibitbackendimproved.profile.exception.NotFoundPersonalityException;
+import com.hibitbackendimproved.profile.exception.NotFoundProfileException;
+import com.hibitbackendimproved.support.error.dto.ErrorReportRequest;
+import com.hibitbackendimproved.support.error.dto.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,7 +35,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

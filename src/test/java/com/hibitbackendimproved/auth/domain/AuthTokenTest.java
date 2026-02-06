@@ -12,7 +12,7 @@ class AuthTokenTest {
     @Test
     void 같은_리프레시_토큰_값이면_정상적으로_메서드를_종료한다() {
         // given
-        AuthToken authToken = new AuthToken("dummyAccessToken", "dummyRefreshToken", 0);
+        AuthToken authToken = new AuthToken("dummyAccessToken", "dummyRefreshToken");
 
         // when & then
         authToken.validateHasSameRefreshToken(authToken.getRefreshToken());
@@ -22,7 +22,7 @@ class AuthTokenTest {
     @Test
     void 같은_리프레시_토큰_값이_아니면_예외를_발생한다() {
         // given
-        AuthToken authToken = new AuthToken("dummyAccessToken", "dummyRefreshToken", 0);
+        AuthToken authToken = new AuthToken("dummyAccessToken", "dummyRefreshToken");
 
         // when & then
         assertThatThrownBy(() -> authToken.validateHasSameRefreshToken("invalidRefreshToken"))

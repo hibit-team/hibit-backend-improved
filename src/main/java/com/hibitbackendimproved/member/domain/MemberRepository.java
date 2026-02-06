@@ -1,7 +1,7 @@
 package com.hibitbackendimproved.member.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.hibitbackendimproved.member.exception.NotFoundMemberException;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
@@ -9,14 +9,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(final String email);
 
-    default Member getById(final Long id) {
+    default Member getByIdOrThrow(final Long id) {
         return findById(id)
                 .orElseThrow(NotFoundMemberException::new);
     }
 
     boolean existsByEmail(final String email);
 
-    default Member getByEmail(final String email) {
+    default Member getByEmailOrThrow(final String email) {
         return findByEmail(email)
                 .orElseThrow(NotFoundMemberException::new);
     }

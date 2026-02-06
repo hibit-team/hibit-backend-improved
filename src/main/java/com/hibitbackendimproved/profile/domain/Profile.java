@@ -5,10 +5,20 @@ import com.hibitbackendimproved.common.BaseEntity;
 import com.hibitbackendimproved.member.domain.Member;
 import com.hibitbackendimproved.profile.exception.InvalidIntroduceException;
 import com.hibitbackendimproved.profile.exception.InvalidNicknameException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.*;
 @Getter
 @Table(name = "profiles")
 @Entity
@@ -127,6 +137,7 @@ public class Profile extends BaseEntity {
         validateIntroduce(introduce);
         this.introduce = introduce;
     }
+
     public void updateImageName(final String imageName) {
         this.imageName = imageName;
     }

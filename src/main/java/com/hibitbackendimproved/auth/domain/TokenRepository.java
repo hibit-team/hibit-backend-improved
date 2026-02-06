@@ -6,8 +6,6 @@ public interface TokenRepository {
 
     void deleteAll();
 
-    void deleteByMemberId(final Long memberId);
-
     boolean exist(final Long memberId);
 
     String getToken(final Long memberId);

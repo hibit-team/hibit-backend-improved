@@ -26,7 +26,7 @@ public class PostFixtures {
     public static final String 전시회제목1 = "PROJECT HASHTAG 2023 SELECTED ARTISTS";
 
     public static final int 전시관람인원1 = 3;
-    public static final LocalDateTime 전시관람희망날짜1 = LocalDateTime.now();
+    public static final LocalDateTime 전시관람희망날짜1 = LocalDateTime.now().withNano(0);
     public static final String 오픈채팅방Url1 = "http://projecthashtag.net/";
     public static final TogetherActivity 함께하고싶은활동1 = TogetherActivity.EAT;
 
@@ -56,7 +56,7 @@ public class PostFixtures {
     public static final String 전시회제목2 = "오스틴리 전시회";
 
     public static final int 전시관람인원2 = 4;
-    public static final LocalDateTime 전시관람희망날짜2 = LocalDateTime.now();
+    public static final LocalDateTime 전시관람희망날짜2 = LocalDateTime.now().plusDays(1).withNano(0);
 
     public static final String 오픈채팅방Url2 = "http://ostin.net/";
     public static final TogetherActivity 함께하고싶은활동2 = TogetherActivity.CAFE;

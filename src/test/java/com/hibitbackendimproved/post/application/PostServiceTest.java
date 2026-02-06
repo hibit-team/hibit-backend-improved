@@ -15,6 +15,8 @@ import com.hibitbackendimproved.post.dto.response.PostsSliceResponse;
 import com.hibitbackendimproved.post.exception.NotFoundPostException;
 import com.hibitbackendimproved.profile.domain.Profile;
 import com.hibitbackendimproved.profile.domain.ProfileRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +27,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +72,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         profileRepository.save(팬시_프로필);
@@ -104,7 +104,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         Profile profile = profileRepository.save(팬시_프로필);
@@ -120,7 +120,7 @@ class PostServiceTest extends IntegrationTestSupport {
         assertAll(
                 () -> assertThat(response.getId()).isEqualTo(post.getId()),
                 () -> assertThat(response.getWriterId()).isEqualTo(post.getMember().getId()),
-                () -> assertThat(response.getWriterName()).isEqualTo(post.getMember().getDisplayName()),
+                () -> assertThat(response.getWriterName()).isEqualTo(post.getMember().getNickname()),
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
                 () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
                 () -> assertThat(response.getExhibition()).isEqualTo(post.getExhibition())
@@ -133,7 +133,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         Profile profile = profileRepository.save(팬시_프로필);
@@ -160,7 +160,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         Profile profile = profileRepository.save(팬시_프로필);
@@ -195,7 +195,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         Profile profile = profileRepository.save(팬시_프로필);
@@ -209,7 +209,7 @@ class PostServiceTest extends IntegrationTestSupport {
 
         // when
         PostsSliceResponse myPosts = postService.searchSlickWithQuery(query,
-                PageRequest.of(0, 3, DESC, "created_date_time"));
+                PageRequest.of(0, 3, DESC, "created_at"));
         PostsCountResponse response = postService.countPostWithQuery(query);
 
         // then
@@ -227,7 +227,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         Profile profile = profileRepository.save(팬시_프로필);
@@ -239,7 +239,7 @@ class PostServiceTest extends IntegrationTestSupport {
 
         // when
         PostsSliceResponse response = postService.searchSlickWithQuery("프로젝트",
-                PageRequest.of(0, 3, DESC, "created_date_time"));
+                PageRequest.of(0, 3, DESC, "created_at"));
 
         // then
         assertAll(
@@ -255,7 +255,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         Profile profile = profileRepository.save(팬시_프로필);
@@ -269,7 +269,7 @@ class PostServiceTest extends IntegrationTestSupport {
         String query = "프로젝트";
         // when
         PostsSliceResponse myPosts = postService.searchSlickWithQuery(query,
-                PageRequest.of(0, 3, DESC, "created_date_time"));
+                PageRequest.of(0, 3, DESC, "created_at"));
         PostsCountResponse response = postService.countPostWithQuery(query);
 
         // then
@@ -288,7 +288,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         Profile profile = profileRepository.save(팬시_프로필);
@@ -301,7 +301,7 @@ class PostServiceTest extends IntegrationTestSupport {
 
         // when
         PostsSliceResponse myPosts = postService.searchSlickWithQuery(query,
-                PageRequest.of(0, 3, DESC, "created_date_time"));
+                PageRequest.of(0, 3, DESC, "created_at"));
         PostsCountResponse response = postService.countPostWithQuery(query);
 
         // then
@@ -346,7 +346,7 @@ class PostServiceTest extends IntegrationTestSupport {
         // given
         Member 팬시 = 팬시();
         memberRepository.save(팬시);
-        Member member = memberRepository.getById(팬시.getId());
+        Member member = memberRepository.getByIdOrThrow(팬시.getId());
 
         Profile 팬시_프로필 = 팬시_프로필(member);
         Profile profile = profileRepository.save(팬시_프로필);

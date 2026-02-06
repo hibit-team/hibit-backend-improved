@@ -1,11 +1,11 @@
 package com.hibitbackendimproved.post.domain;
 
 import com.hibitbackendimproved.post.exception.InvalidContentException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Lob;
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Lob;
 import java.util.Objects;
 
 @Getter

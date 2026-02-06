@@ -1,6 +1,7 @@
 package com.hibitbackendimproved.auth.dto.request;
 
-import javax.validation.constraints.NotNull;
+
+import jakarta.validation.constraints.NotNull;
 
 public class TokenRenewalRequest {
 

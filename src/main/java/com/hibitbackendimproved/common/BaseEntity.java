@@ -1,12 +1,12 @@
 package com.hibitbackendimproved.common;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -14,24 +14,24 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
 
     @CreatedDate
-    @Column(name = "created_date_time", nullable = false, updatable = false)
-    private LocalDateTime createDateTime;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createAt;
 
     @LastModifiedDate
-    @Column(name = "updated_date_time", nullable = false)
-    private LocalDateTime updateDateTime;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updateAt;
 
     // 생성자 추가
     protected BaseEntity() {
-        this.createDateTime = LocalDateTime.now();
-        this.updateDateTime = LocalDateTime.now();
+        this.createAt = LocalDateTime.now();
+        this.updateAt = LocalDateTime.now();
     }
 
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
+    public LocalDateTime getCreateAt() {
+        return createAt;
     }
 
-    public LocalDateTime getUpdateDateTime() {
-        return updateDateTime;
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
     }
 }

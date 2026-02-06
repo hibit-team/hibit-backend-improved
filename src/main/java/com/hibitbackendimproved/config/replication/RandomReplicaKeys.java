@@ -14,6 +14,7 @@ public class RandomReplicaKeys {
         this.dataSourceKeys = List.copyOf(DataSourceKey.getReplicas());
         this.size = dataSourceKeys.size();
     }
+
     public DataSourceKey next() {
         int currentDataSourceIndex = random.nextInt(size);
         return dataSourceKeys.get(currentDataSourceIndex);

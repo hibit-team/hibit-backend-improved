@@ -40,7 +40,7 @@ class ProfileRepositoryTest extends IntegrationTestSupport {
     @Test
     void 프로필과_회원_테이블이_정상적으로_매핑이_된다() {
         // given
-        Profile foundProfile = profileRepository.getById(profile1.getId());
+        Profile foundProfile = profileRepository.getByIdOrThrow(profile1.getId());
 
         // when & then
         assertThat(foundProfile.getMember()).isNotNull();

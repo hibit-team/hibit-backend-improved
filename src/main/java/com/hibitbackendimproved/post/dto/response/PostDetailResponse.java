@@ -2,7 +2,6 @@ package com.hibitbackendimproved.post.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hibitbackendimproved.auth.dto.LoginMember;
-import com.hibitbackendimproved.member.domain.Member;
 import com.hibitbackendimproved.post.domain.Post;
 import com.hibitbackendimproved.post.domain.PostStatus;
 import lombok.AccessLevel;
@@ -18,8 +17,6 @@ import static com.hibitbackendimproved.post.dto.response.PostResponse.Attendance
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostDetailResponse {
-    private static final String HIBIT_BASIC_IMAGE = "https://hibitbucket.s3.ap-northeast-2.amazonaws.com/hibit-image.png";
-
     private Long id;
     private Long writerId;
     private String writerName;
@@ -57,7 +54,7 @@ public class PostDetailResponse {
         return PostDetailResponse.builder()
                 .id(post.getId())
                 .writerId(loginMember.getId())
-                .writerName(post.getMember().getDisplayName())
+                .writerName(post.getMember().getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .exhibition(post.getExhibition())
@@ -68,12 +65,5 @@ public class PostDetailResponse {
                 .imageName(post.getImageName())
                 .viewCount(post.getViewCount())
                 .build();
-    }
-
-    private static String findWriterImage(final Member member) {
-        if(!member.getMainImage().isEmpty()) {
-            return member.getMainImage();
-        }
-        return HIBIT_BASIC_IMAGE;
     }
 }

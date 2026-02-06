@@ -48,7 +48,7 @@ public class PostService {
     @Transactional
     public PostDetailResponse save(final LoginMember loginMember, final PostCreateRequest request) {
         validateMember(loginMember.getId());
-        Member foundMember = memberRepository.getById(loginMember.getId());
+        Member foundMember = memberRepository.getByIdOrThrow(loginMember.getId());
         Post savedPost = request.toEntity(foundMember, request);
         postRepository.save(savedPost);
         return PostDetailResponse.of(savedPost, loginMember);
@@ -92,7 +92,7 @@ public class PostService {
     }
 
     public PostsCountResponse countPostWithQuery(final String query) {
-        Pageable pageable = PageRequest.of(0, 3, DESC, "created_date_time");
+        Pageable pageable = PageRequest.of(0, 3, DESC, "created_at");
         SearchQuery searchQuery = new SearchQuery(query);
 
         Page<Post> posts = postRepository.findPostPagesByQuery(pageable, searchQuery.getValue());
@@ -100,7 +100,7 @@ public class PostService {
     }
 
     public PostsSliceResponse searchSlickWithQuery(final String query, Pageable pageable) {
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DESC, "created_date_time");
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DESC, "created_at");
         SearchQuery searchQuery = new SearchQuery(query);
 
         Slice<Post> posts = postRepository.findPostSlicePageByQuery(pageable, searchQuery.getValue());
@@ -109,7 +109,7 @@ public class PostService {
 
     @Transactional
     public void update(final Long memberId, final Long postId, final PostUpdateServiceRequest request) {
-        Member member = memberRepository.getById(memberId);
+        Member member = memberRepository.getByIdOrThrow(memberId);
         Post post = findPostObject(postId);
         validateProductMembership(memberId, post);
 

@@ -16,7 +16,7 @@ public class StubOAuthClient implements OAuthClient {
     }
 
     @Override
-    public OAuthAccessTokenResponse getAccessToken(final String refreshToken) {
-        return new OAuthAccessTokenResponse(STUB_OAUTH_ACCESS_TOKEN);
+    public String getProviderName() {
+        return "";
     }
 }

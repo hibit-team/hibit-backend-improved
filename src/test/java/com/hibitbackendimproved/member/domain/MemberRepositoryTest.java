@@ -26,7 +26,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         Member 팬시 = memberRepository.save(팬시());
 
         // when
-        Member actual = memberRepository.getByEmail(팬시_이메일);
+        Member actual = memberRepository.getByEmailOrThrow(팬시_이메일);
 
         // then
         assertThat(actual.getId()).isEqualTo(팬시.getId());
@@ -52,7 +52,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         String email = "devfancy@gmail.com";
 
         // given & when & then
-        assertThatThrownBy(() -> memberRepository.getByEmail(email))
+        assertThatThrownBy(() -> memberRepository.getByEmailOrThrow(email))
                 .isInstanceOf(NotFoundMemberException.class);
     }
 
