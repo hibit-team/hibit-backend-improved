@@ -12,10 +12,6 @@ on:
       - feature/*
     # paths: './**'
 
-    # defaults:
-    # run:
-    # working-directory: hibit-backend-improved
-
 # Report 결과 쓰기 위해 필요
 permissions:
   checks: write
@@ -24,21 +20,21 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+    # env:
+      # KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+      # KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+      # JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
     steps:
       - name: 레포지토리를 가져옵니다
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.HIBIT_IMPROVED_TOKEN}}
+          token: ${{ secrets.HIBIT_CI_TOKEN}}
           submodules: true
 
-      - name: JDK 11을 설치합니다.
+      - name: JDK 21을 설치합니다.
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: 타입존을 설정합니다
