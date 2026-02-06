@@ -13,11 +13,12 @@ public interface OAuthTokenRepository extends JpaRepository<OAuthToken, Long> {
     @Query("SELECT o "
             + "FROM OAuthToken o "
             + "WHERE o.member.id = :memberId")
-    Optional<OAuthToken> findByMemberId(@Param("memberId")  Long memberId);
+    Optional<OAuthToken> findByMemberId(@Param("memberId") Long memberId);
 
     default OAuthToken getByMemberId(final Long memberId) {
         return findByMemberId(memberId)
                 .orElseThrow(NotFoundOAuthTokenException::new);
     }
+
     void deleteAllByMemberId(final Long memberId);
 }

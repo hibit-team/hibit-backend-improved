@@ -72,7 +72,7 @@ public class ProfileService {
     @Transactional
     public void update(final Long memberId, final ProfileUpdateRequest request) {
         Profile profile = profileRepository.findByMemberId(memberId)
-                        .orElseThrow(NotFoundProfileException::new);
+                .orElseThrow(NotFoundProfileException::new);
         validateExistByNickname(request.getNickname());
         Member foundMember = memberRepository.getByIdOrThrow(memberId);
 

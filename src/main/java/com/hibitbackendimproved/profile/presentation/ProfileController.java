@@ -3,17 +3,22 @@ package com.hibitbackendimproved.profile.presentation;
 
 import com.hibitbackendimproved.auth.dto.LoginMember;
 import com.hibitbackendimproved.auth.presentation.AuthenticationPrincipal;
-import com.hibitbackendimproved.support.ApiResponse;
 import com.hibitbackendimproved.profile.application.ProfileService;
 import com.hibitbackendimproved.profile.domain.PersonalityType;
 import com.hibitbackendimproved.profile.dto.request.ProfileCreateRequest;
 import com.hibitbackendimproved.profile.dto.request.ProfileUpdateRequest;
 import com.hibitbackendimproved.profile.dto.response.ProfileOtherResponse;
 import com.hibitbackendimproved.profile.dto.response.ProfileResponse;
+import com.hibitbackendimproved.support.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +33,7 @@ public class ProfileController {
 
     @PostMapping("/api/profiles/new")
     public ResponseEntity<ApiResponse<ProfileResponse>> saveMyProfile(@AuthenticationPrincipal final LoginMember loginMember,
-                                                          @Valid @RequestBody final ProfileCreateRequest request) {
+                                                                      @Valid @RequestBody final ProfileCreateRequest request) {
         ProfileResponse profileResponse = profileService.save(loginMember.getId(), request);
         ApiResponse<ProfileResponse> apiResponse = ApiResponse.created(profileResponse);
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
@@ -50,7 +55,7 @@ public class ProfileController {
 
     @GetMapping("/api/profiles/other/{id}")
     public ResponseEntity<ApiResponse<ProfileOtherResponse>> findOtherProfile(@AuthenticationPrincipal final LoginMember loginMember,
-                                                                 @PathVariable(name = "id") final Long otherMemberId) {
+                                                                              @PathVariable(name = "id") final Long otherMemberId) {
         ProfileOtherResponse profileOtherResponse = profileService.findOtherProfile(otherMemberId);
         ApiResponse<ProfileOtherResponse> apiResponse = ApiResponse.ok(profileOtherResponse);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -58,7 +63,7 @@ public class ProfileController {
 
     @PutMapping("/api/profiles/me")
     public ResponseEntity<ApiResponse<Void>> update(@AuthenticationPrincipal final LoginMember loginMember,
-                                       @Valid @RequestBody final ProfileUpdateRequest request) {
+                                                    @Valid @RequestBody final ProfileUpdateRequest request) {
         profileService.update(loginMember.getId(), request);
         ApiResponse<Void> apiResponse = ApiResponse.noContent();
         return new ResponseEntity<>(apiResponse, HttpStatus.NO_CONTENT);

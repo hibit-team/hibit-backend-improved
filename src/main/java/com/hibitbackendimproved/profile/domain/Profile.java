@@ -137,6 +137,7 @@ public class Profile extends BaseEntity {
         validateIntroduce(introduce);
         this.introduce = introduce;
     }
+
     public void updateImageName(final String imageName) {
         this.imageName = imageName;
     }

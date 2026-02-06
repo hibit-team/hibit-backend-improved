@@ -1,7 +1,7 @@
 package com.hibitbackendimproved.member.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.hibitbackendimproved.member.exception.NotFoundMemberException;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 

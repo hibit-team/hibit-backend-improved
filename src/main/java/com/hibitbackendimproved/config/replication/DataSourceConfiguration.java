@@ -12,8 +12,12 @@ import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import javax.sql.DataSource;
 import java.util.Map;
 
-import static com.hibitbackendimproved.config.replication.DataSourceKey.KeyName.*;
-import static com.hibitbackendimproved.config.replication.DataSourceKey.*;
+import static com.hibitbackendimproved.config.replication.DataSourceKey.KeyName.REPLICA_1_NAME;
+import static com.hibitbackendimproved.config.replication.DataSourceKey.KeyName.REPLICA_2_NAME;
+import static com.hibitbackendimproved.config.replication.DataSourceKey.KeyName.SOURCE_NAME;
+import static com.hibitbackendimproved.config.replication.DataSourceKey.REPLICA_1;
+import static com.hibitbackendimproved.config.replication.DataSourceKey.REPLICA_2;
+import static com.hibitbackendimproved.config.replication.DataSourceKey.SOURCE;
 
 @Configuration
 @Profile("prod")
