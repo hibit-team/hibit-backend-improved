@@ -31,30 +31,24 @@ public class Member extends BaseEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "display_name", nullable = false)
-    private String displayName;
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "social_type", nullable = true)
     private SocialType socialType;
 
-    @Column(nullable = false, columnDefinition = "boolean default false")
-    private boolean isProfile;
-
-    @Column(name = "main_image", nullable = true)
-    private String mainImage;
-
     protected Member() {
     }
 
     @Builder
-    public Member(final String email, final String displayName, final SocialType socialType) {
+    public Member(final String email, final String nickname, final SocialType socialType) {
         super();
         validateEmail(email);
-        validateDisplayName(displayName);
+        validateNickName(nickname);
 
         this.email = email;
-        this.displayName = displayName;
+        this.nickname = nickname;
         this.socialType = socialType;
     }
 
@@ -65,13 +59,13 @@ public class Member extends BaseEntity {
         }
     }
 
-    private void validateDisplayName(final String displayName) {
-        if (displayName.isBlank() || displayName.length() > MAX_DISPLAY_NAME_LENGTH) {
+    private void validateNickName(final String nickname) {
+        if (nickname.isBlank() || nickname.length() > MAX_DISPLAY_NAME_LENGTH) {
             throw new InvalidMemberException(String.format("이름은 1자 이상 20자 %d이하여야 합니다.", MAX_DISPLAY_NAME_LENGTH));
         }
     }
 
-    public void updateDisplayName(final String nickname) {
-        this.displayName = nickname;
+    public void updateNickname(final String nickname) {
+        this.nickname = nickname;
     }
 }

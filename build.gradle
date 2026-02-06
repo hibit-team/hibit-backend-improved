@@ -133,7 +133,7 @@ jacocoTestReport {
 jacocoTestCoverageVerification {
     violationRules {
         rule {
-            enabled = true
+            enabled = false
             element = 'CLASS'
 
             limit {

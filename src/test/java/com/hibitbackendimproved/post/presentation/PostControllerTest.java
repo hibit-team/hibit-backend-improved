@@ -158,7 +158,7 @@ class PostControllerTest extends ControllerTestSupport {
         PostDetailResponse response = PostDetailResponse.builder()
                 .id(postId)
                 .writerId(팬시.getId())
-                .writerName(팬시.getDisplayName())
+                .writerName(팬시.getNickname())
                 .title(게시글제목1)
                 .content(게시글내용1)
                 .exhibition(전시회제목1)

@@ -54,7 +54,7 @@ public class PostDetailResponse {
         return PostDetailResponse.builder()
                 .id(post.getId())
                 .writerId(loginMember.getId())
-                .writerName(post.getMember().getDisplayName())
+                .writerName(post.getMember().getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .exhibition(post.getExhibition())

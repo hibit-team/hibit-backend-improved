@@ -23,6 +23,6 @@ public class MemberResponse {
     }
 
     public MemberResponse(final Member member) {
-        this(member.getId(), member.getEmail(), member.getDisplayName(), member.getSocialType());
+        this(member.getId(), member.getEmail(), member.getNickname(), member.getSocialType());
     }
 }

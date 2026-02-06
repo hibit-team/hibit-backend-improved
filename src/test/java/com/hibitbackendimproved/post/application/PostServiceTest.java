@@ -120,7 +120,7 @@ class PostServiceTest extends IntegrationTestSupport {
         assertAll(
                 () -> assertThat(response.getId()).isEqualTo(post.getId()),
                 () -> assertThat(response.getWriterId()).isEqualTo(post.getMember().getId()),
-                () -> assertThat(response.getWriterName()).isEqualTo(post.getMember().getDisplayName()),
+                () -> assertThat(response.getWriterName()).isEqualTo(post.getMember().getNickname()),
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
                 () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
                 () -> assertThat(response.getExhibition()).isEqualTo(post.getExhibition())

@@ -17,7 +17,7 @@ public class MemberFixtures {
     public static Member 팬시() {
         return Member.builder()
                 .email(팬시_이메일)
-                .displayName(팬시_닉네임)
+                .nickname(팬시_닉네임)
                 .socialType(소셜로그인유형)
                 .build();
     }

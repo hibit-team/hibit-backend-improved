@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static com.hibitbackendimproved.common.fixtures.MemberFixtures.팬시_닉네임;
 import static com.hibitbackendimproved.common.fixtures.MemberFixtures.팬시_이메일;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -30,7 +31,21 @@ class MemberTest {
             .isInstanceOf(InvalidMemberException.class);
     }
 
-    @DisplayName("회원의 닉네임 형식이 빈칸이거나 공백이면 예외가 발생한다.")
+    @DisplayName("회원의 닉네임을 수정한다.")
+    @Test
+    void 회원의_닉네임을_수정한다() {
+        // given
+        final Member member = new Member(팬시_이메일, 팬시_닉네임, SocialType.KAKAO);
+        final String updatedNickname = "잠만보";
+
+        // when
+        member.updateNickname(updatedNickname);
+
+        // then
+        assertThat(member.getNickname()).isEqualTo(updatedNickname);
+    }
+
+    @DisplayName("회원의 닉네임 형식이 잘못되면 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     void 회원의_닉네임_형식이_빈칸이거나_공백이면_예외가_발생한다(final String nickname) {
