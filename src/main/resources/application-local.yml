@@ -1,0 +1,68 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:db;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    show_sql: true
+    properties:
+      dialect: org.hibernate.dialect.MySQL8Dialect
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul
+    defer-datasource-initialization: true
+  sql: # SQL init
+    init:
+      mode: never
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+
+server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/plain,text/css,application/javascript,application/json
+    min-response-size: 500 # 500 Byte 미만일 시 압축을 적용하지 않음
+  servlet:
+    session:
+      cookie:
+        http-only: true
+  multipart:
+    max-file-size: 10MB # 파일 업로드의 최대 크기를 10MB로 제한
+    max-request-size: 10MB
+
+
+# Google OAuth
+cors:
+  allow-origin:
+    urls: http://localhost:8080, http://localhost:3000, http://localhost:3000/oauth/kakao-redirect
+
+oauth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+    authorization-endpoint: https://kauth.kakao.com/oauth/authorize
+    response-type: code
+    scopes:
+      - profile_nickname
+      - profile_image
+    token-uri: https://kauth.kakao.com/oauth/token # 액세스 토큰 받을 때 필요한 endpoint
+    user-info-uri: https://kapi.kakao.com/v2/user/me # 액세스 토큰을 사용하여 이 endpoint 를 호출하여 사용자의 정보를 가져올 때 사용
+
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET_KEY}
+      access:
+        expire-length : 3600000 #1시간
+      refresh:
+        expire-length: 1210000000 #14일
