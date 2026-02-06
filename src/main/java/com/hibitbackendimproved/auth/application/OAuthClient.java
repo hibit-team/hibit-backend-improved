@@ -7,5 +7,5 @@ import com.hibitbackendimproved.auth.dto.response.OAuthAccessTokenResponse;
 public interface OAuthClient {
     OAuthMember getOAuthMember(final String code, final String redirectUri);
 
-    OAuthAccessTokenResponse getAccessToken(final String refreshToken);
+    String getProviderName();
 }

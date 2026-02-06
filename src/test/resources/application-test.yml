@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:db?serverTimezone=Asia/Seoul;MODE=MYSQL;
+    url: jdbc:h2:mem:db;MODE=MySQL;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -41,27 +41,27 @@ server:
   servlet:
     context-path: /api
 
-# Google OAuth
+# OAuth
 cors:
   allow-origin:
-    urls: http://localhost:8080, http://localhost:3000, http://localhost:3000/google-callback
+    urls: http://localhost:8080, http://localhost:3000, http://localhost:3000/kakao-callback
 
 oauth:
-  google:
-    client-id: ${GOOGLE_CLIENT_ID}
-    client-secret: ${GOOGLE_CLIENT_SECRET}
-    oauth-end-point: https://accounts.google.com/o/oauth2/v2/auth
+  kakao:
+    client-id: dummy-kakao-client-id
+    client-secret: dummy-kakao-client-secret
+    authorization-endpoint: https://kauth.kakao.com/oauth/authorize
     response-type: code
     scopes:
-      - https://www.googleapis.com/auth/userinfo.email
-      - https://www.googleapis.com/auth/userinfo.profile
-    token-uri: https://oauth2.googleapis.com/token
-    access-type: offline
+      - profile_nickname
+      - profile_image
+    token-uri: https://kauth.kakao.com/oauth/token # 액세스 토큰 받을 때 필요한 endpoint
+    user-info-uri: https://kapi.kakao.com/v2/user/me # 액세스 토큰을 사용하여 이 endpoint 를 호출하여 사용자의 정보를 가져올 때 사용
 
 security:
   jwt:
     token:
-      secret-key: ${JWT_SECRET_KEY}
+      secret-key: hibi-dummy-secret-key-for-test-12345678901234567890
       access:
         expire-length : 3600000 #1시간
       refresh:

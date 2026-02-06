@@ -11,11 +11,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Getter
 @Table(name = "members")
 @Entity
 public class Member extends BaseEntity {
@@ -31,10 +32,10 @@ public class Member extends BaseEntity {
     private String email;
 
     @Column(name = "display_name", nullable = false)
-    private String displayName; // 구글로부터 가져오는 닉네임
+    private String displayName;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "social_type", nullable = false)
+    @Column(name = "social_type", nullable = true)
     private SocialType socialType;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
@@ -64,49 +65,13 @@ public class Member extends BaseEntity {
         }
     }
 
-    /**
-     * isEmpty() 는 "" 에 대한 문자열을 확인 -> 비어있는 경우 true 반환
-     * isBlank() "", " " 에 대한 문자열을 확인 -> 비어있는 경우 true 반환
-     */
     private void validateDisplayName(final String displayName) {
         if (displayName.isBlank() || displayName.length() > MAX_DISPLAY_NAME_LENGTH) {
             throw new InvalidMemberException(String.format("이름은 1자 이상 20자 %d이하여야 합니다.", MAX_DISPLAY_NAME_LENGTH));
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public SocialType getSocialType() {
-        return socialType;
-    }
-
-    public String getMainImage() {
-        return mainImage;
-    }
-
     public void updateDisplayName(final String nickname) {
         this.displayName = nickname;
-    }
-
-    public boolean getIsprofile() {
-        return isProfile;
-    }
-
-    public void updateIsprofile() {
-        this.isProfile = true;
-    }
-
-    public void updateMainImage(final String mainImage) {
-        this.mainImage = mainImage;
     }
 }

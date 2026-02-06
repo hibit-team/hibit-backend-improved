@@ -9,4 +9,9 @@ public class StubOAuthUri implements OAuthUri {
     public String generate(final String redirectUri) {
         return "https://localhost:3000";
     }
+
+    @Override
+    public String getProviderName() {
+        return "oauth";
+    }
 }

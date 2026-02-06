@@ -92,7 +92,7 @@ public class PostService {
     }
 
     public PostsCountResponse countPostWithQuery(final String query) {
-        Pageable pageable = PageRequest.of(0, 3, DESC, "created_date_time");
+        Pageable pageable = PageRequest.of(0, 3, DESC, "created_at");
         SearchQuery searchQuery = new SearchQuery(query);
 
         Page<Post> posts = postRepository.findPostPagesByQuery(pageable, searchQuery.getValue());
@@ -100,7 +100,7 @@ public class PostService {
     }
 
     public PostsSliceResponse searchSlickWithQuery(final String query, Pageable pageable) {
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DESC, "created_date_time");
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DESC, "created_at");
         SearchQuery searchQuery = new SearchQuery(query);
 
         Slice<Post> posts = postRepository.findPostSlicePageByQuery(pageable, searchQuery.getValue());

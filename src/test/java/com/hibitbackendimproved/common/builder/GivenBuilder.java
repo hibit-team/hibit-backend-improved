@@ -14,7 +14,7 @@ public class GivenBuilder {
     }
 
     public GivenBuilder 회원_가입을_한다(final String email, final String displayName) {
-        Member member = new Member(email, displayName, SocialType.GOOGLE);
+        Member member = new Member(email, displayName, SocialType.KAKAO);
         this.member = bs.memberRepository().save(member);
         OAuthToken oAuthToken = new OAuthToken(this.member, "refreshTokenValue");
         bs.oAuthTokenRepository().save(oAuthToken);

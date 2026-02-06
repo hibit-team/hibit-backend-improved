@@ -49,7 +49,7 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void 서비스에_가입한_회원을_조회한다_수정전() {
         // given
-        Member member = new Member("fancy@gmail.com", "fancy", SocialType.GOOGLE);
+        Member member = new Member("fancy@gmail.com", "fancy", SocialType.KAKAO);
         this.member = memberRepository.save(member);
         OAuthToken oAuthToken = new OAuthToken(this.member, "refreshTokenValue");
         oAuthTokenRepository.save(oAuthToken);

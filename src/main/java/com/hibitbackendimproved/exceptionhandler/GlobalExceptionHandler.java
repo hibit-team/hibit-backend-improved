@@ -6,7 +6,7 @@ import com.hibitbackendimproved.auth.exception.NotFoundOAuthTokenException;
 import com.hibitbackendimproved.auth.exception.NotFoundTokenException;
 import com.hibitbackendimproved.support.error.dto.ErrorReportRequest;
 import com.hibitbackendimproved.support.error.dto.ErrorResponse;
-import com.hibitbackendimproved.infrastructure.oauth.exception.OAuthException;
+import com.hibitbackendimproved.auth.exception.OAuthException;
 import com.hibitbackendimproved.member.exception.InvalidMemberException;
 import com.hibitbackendimproved.member.exception.NotFoundMemberException;
 import com.hibitbackendimproved.post.exception.*;

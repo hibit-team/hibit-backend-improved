@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT * " +
             "FROM posts p " +
-            "ORDER BY p.created_date_time DESC", nativeQuery = true)
+            "ORDER BY p.created_at DESC", nativeQuery = true)
     List<Post> findAllByOrderByCreatedDateTimeDesc();
 
     @Transactional

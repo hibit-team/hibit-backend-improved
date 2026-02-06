@@ -1,31 +1,17 @@
 package com.hibitbackendimproved.auth.domain;
 
 import com.hibitbackendimproved.auth.exception.NotFoundTokenException;
+import lombok.Getter;
 
+@Getter
 public class AuthToken {
 
-    private String accessToken;
-    private String refreshToken;
+    private final String accessToken;
+    private final String refreshToken;
 
-    private int isProfileRegistered;
-
-    public AuthToken(final String accessToken, final String refreshToken, final int isProfileRegistered) {
+    public AuthToken(final String accessToken, final String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.isProfileRegistered = isProfileRegistered;
-    }
-
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public int getIsProfileRegistered() {
-        return isProfileRegistered;
     }
 
     public void validateHasSameRefreshToken(final String otherRefreshToken) {

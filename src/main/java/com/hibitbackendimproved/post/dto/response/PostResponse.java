@@ -44,7 +44,7 @@ public class PostResponse {
                 .exhibitionAttendanceAndTogetherActivity(AttendanceAndTogetherActivity(post.getExhibitionAttendance(), post.getTogetherActivity()))
                 .postStatus(post.getPostStatus())
                 .imageName(post.getImageName())
-                .createDateTime(post.getCreateDateTime())
+                .createDateTime(post.getCreateAt())
                 .build();
     }
 

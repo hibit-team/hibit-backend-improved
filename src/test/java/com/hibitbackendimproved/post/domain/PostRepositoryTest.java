@@ -108,7 +108,7 @@ class PostRepositoryTest extends IntegrationTestSupport {
     @Test
     void findPostPagesByQuery() {
         // given
-        Page<Post> result = postRepository.findPostPagesByQuery(PageRequest.of(0, 3, DESC, "created_date_time"), "");
+        Page<Post> result = postRepository.findPostPagesByQuery(PageRequest.of(0, 3, DESC, "created_at"), "");
 
         // when & then
         assertThat(result.getTotalElements()).isEqualTo(3L);
@@ -118,7 +118,7 @@ class PostRepositoryTest extends IntegrationTestSupport {
     @Test
     void findPostSlicePageByQuery() {
         // given
-        Slice<Post> result = postRepository.findPostSlicePageByQuery(PageRequest.of(0, 2, DESC, "created_date_time"), "");
+        Slice<Post> result = postRepository.findPostSlicePageByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
 
         // when & then
         assertThat(result.getContent()).containsExactly(post2, post1);

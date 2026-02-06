@@ -209,7 +209,7 @@ class PostServiceTest extends IntegrationTestSupport {
 
         // when
         PostsSliceResponse myPosts = postService.searchSlickWithQuery(query,
-                PageRequest.of(0, 3, DESC, "created_date_time"));
+                PageRequest.of(0, 3, DESC, "created_at"));
         PostsCountResponse response = postService.countPostWithQuery(query);
 
         // then
@@ -239,7 +239,7 @@ class PostServiceTest extends IntegrationTestSupport {
 
         // when
         PostsSliceResponse response = postService.searchSlickWithQuery("프로젝트",
-                PageRequest.of(0, 3, DESC, "created_date_time"));
+                PageRequest.of(0, 3, DESC, "created_at"));
 
         // then
         assertAll(
@@ -269,7 +269,7 @@ class PostServiceTest extends IntegrationTestSupport {
         String query = "프로젝트";
         // when
         PostsSliceResponse myPosts = postService.searchSlickWithQuery(query,
-                PageRequest.of(0, 3, DESC, "created_date_time"));
+                PageRequest.of(0, 3, DESC, "created_at"));
         PostsCountResponse response = postService.countPostWithQuery(query);
 
         // then
@@ -301,7 +301,7 @@ class PostServiceTest extends IntegrationTestSupport {
 
         // when
         PostsSliceResponse myPosts = postService.searchSlickWithQuery(query,
-                PageRequest.of(0, 3, DESC, "created_date_time"));
+                PageRequest.of(0, 3, DESC, "created_at"));
         PostsCountResponse response = postService.countPostWithQuery(query);
 
         // then

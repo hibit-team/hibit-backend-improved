@@ -24,11 +24,6 @@ public class InMemoryAuthTokenRepository implements TokenRepository {
     }
 
     @Override
-    public void deleteByMemberId(final Long memberId) {
-        TOKEN_REPOSITORY.remove(memberId);
-    }
-
-    @Override
     public boolean exist(final Long memberId) {
         return TOKEN_REPOSITORY.containsKey(memberId);
     }
