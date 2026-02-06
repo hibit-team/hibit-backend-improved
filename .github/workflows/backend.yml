@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # env:
       # KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
       # KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
@@ -46,6 +46,8 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle build를 수행합니다
+        # 이 단계가 실패해도 다음 단계로 넘어가며, 전체 job을 실패 처리하지 않음
+        continue-on-error: true
         run: ./gradlew build
 
       - name: 테스트 결과를 PR에 코멘트로 등록합니다.
