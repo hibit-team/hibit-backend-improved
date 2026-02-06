@@ -8,6 +8,7 @@ import com.hibitbackendimproved.auth.exception.ServerErrorOAuthException;
 import com.hibitbackendimproved.config.oauth.KakaoProperties;
 import com.hibitbackendimproved.infrastructure.oauth.dto.KakaoTokenResponse;
 import com.hibitbackendimproved.infrastructure.oauth.dto.KakaoUserInfo;
+import com.hibitbackendimproved.member.domain.SocialType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -42,8 +43,13 @@ public class KakaoOAuthClient implements OAuthClient {
         KakaoTokenResponse kakaoTokenResponse = requestKakaoToken(code, redirectUri);
         KakaoUserInfo kakaoUserInfo = requestUserInfo(kakaoTokenResponse.getAccessToken());
 
-        String refreshToken = kakaoTokenResponse.getAccessToken();
-        return new OAuthMember(kakaoUserInfo.getNickname(), kakaoUserInfo.getProfileImage(), refreshToken);
+        String socialId = String.valueOf(kakaoUserInfo.getId());
+        String refreshToken = kakaoTokenResponse.getRefreshToken();
+
+        String nickname = kakaoUserInfo.getNickname();
+        String profileImage = kakaoUserInfo.getProfileImage();
+
+        return new OAuthMember(socialId, SocialType.KAKAO, refreshToken, nickname, profileImage);
     }
 
     private KakaoTokenResponse requestKakaoToken(final String code, final String redirectUri) {

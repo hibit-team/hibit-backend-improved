@@ -3,43 +3,26 @@ package com.hibitbackendimproved.auth.dto;
 
 import com.hibitbackendimproved.member.domain.Member;
 import com.hibitbackendimproved.member.domain.SocialType;
+import lombok.Getter;
 
+@Getter
 public class OAuthMember {
 
-    private final String email;
-
-    private final String nickname;
+    private String socialId;
     private SocialType socialType;
     private final String refreshToken;
-    private final boolean deleted = false;
+    private final String nickname;
+    private final String profileImage;
 
-    public OAuthMember(final String email, final String nickname, final String refreshToken) {
-        this.email = email;
-        this.nickname = nickname;
-        this.refreshToken = refreshToken;
-    }
-
-    public OAuthMember(final String email, final String nickname, final SocialType socialType, final String refreshToken) {
-        this.email = email;
-        this.nickname = nickname;
+    public OAuthMember(final String socialId, final SocialType socialType, final String refreshToken, final String nickname, final String profileImage) {
+        this.socialId = socialId;
         this.socialType = socialType;
         this.refreshToken = refreshToken;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
     }
 
     public Member toMember() {
-        return new Member(email, nickname, socialType);
+        return new Member(socialId, socialType);
     }
-
 }

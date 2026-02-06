@@ -11,7 +11,8 @@ import com.hibitbackendimproved.auth.event.MemberSavedEvent;
 import com.hibitbackendimproved.auth.exception.ServerErrorOAuthException;
 import com.hibitbackendimproved.member.domain.Member;
 import com.hibitbackendimproved.member.domain.MemberRepository;
-import com.hibitbackendimproved.member.domain.SocialType;
+import com.hibitbackendimproved.profile.domain.Profile;
+import com.hibitbackendimproved.profile.domain.ProfileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,17 +30,19 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final OAuthTokenRepository oAuthTokenRepository;
+    private final ProfileRepository profileRepository;
     private final TokenCreator tokenCreator;
     private final ApplicationEventPublisher eventPublisher;
     private final Map<String, OAuthUri> oauthUriProviders;
     private final Map<String, OAuthClient> oauthClients;
     private final Logger log = LoggerFactory.getLogger(AuthService.class);
 
-    public AuthService(final MemberRepository memberRepository, final OAuthTokenRepository oAuthTokenRepository,
+    public AuthService(final MemberRepository memberRepository, final OAuthTokenRepository oAuthTokenRepository, final ProfileRepository profileRepository,
                        final TokenCreator tokenCreator, final ApplicationEventPublisher eventPublisher,
                        final List<OAuthUri> oauthUris, final List<OAuthClient> oauthClients) {
         this.memberRepository = memberRepository;
         this.oAuthTokenRepository = oAuthTokenRepository;
+        this.profileRepository = profileRepository;
         this.tokenCreator = tokenCreator;
         this.eventPublisher = eventPublisher;
         this.oauthUriProviders = oauthUris.stream()
@@ -63,16 +66,7 @@ public class AuthService {
             throw new ServerErrorOAuthException("제공된 OAuth Provider가 아닙니다.");
         }
         OAuthClient client = oauthClients.get(oauthProvider);
-        OAuthMember oAuthMember = client.getOAuthMember(code, redirectUri);
-        SocialType socialType = determineSocialType(oauthProvider);
-        return new OAuthMember(oAuthMember.getEmail(), oAuthMember.getNickname(), socialType, oAuthMember.getRefreshToken());
-    }
-
-    private SocialType determineSocialType(final String oauthProvider) {
-        return switch (oauthProvider.toLowerCase()) {
-            case "kakao" -> SocialType.KAKAO;
-            default -> throw new ServerErrorOAuthException(oauthProvider + "는 소셜 로그인에 제공하지 않습니다.");
-        };
+        return client.getOAuthMember(code, redirectUri);
     }
 
     @Transactional
@@ -87,9 +81,9 @@ public class AuthService {
     }
 
     private Member findMember(final OAuthMember oAuthMember) {
-        String email = oAuthMember.getEmail();
-        if (memberRepository.existsByEmail(email)) {
-            return memberRepository.getByEmailOrThrow(email);
+        String socialId = oAuthMember.getSocialId();
+        if (memberRepository.existsBySocialId(socialId)) {
+            return memberRepository.getBySocialIdOrThrow(socialId);
         }
         return saveMember(oAuthMember);
     }
@@ -104,6 +98,13 @@ public class AuthService {
 
     private Member saveMember(final OAuthMember oAuthMember) {
         Member savedMember = memberRepository.save(oAuthMember.toMember());
+
+        profileRepository.save(new Profile(
+                savedMember,
+                oAuthMember.getNickname(),
+                oAuthMember.getProfileImage(),
+                null
+        ));
         eventPublisher.publishEvent(new MemberSavedEvent(savedMember.getId()));
         return savedMember;
     }

@@ -7,4 +7,8 @@ public class InvalidExhibitionException extends RuntimeException {
     public InvalidExhibitionException() {
         super(MESSAGE);
     }
+
+    public InvalidExhibitionException(final String message) {
+        super(message);
+    }
 }

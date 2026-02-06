@@ -16,7 +16,7 @@ public class PostsResponse {
 
     public static PostsResponse of(final List<Post> posts) {
         List<PostResponse> postResponses = posts.stream()
-                .map(post -> PostResponse.from(post))
+                .map(PostResponse::from)
                 .collect(Collectors.toList());
         return new PostsResponse(postResponses);
     }

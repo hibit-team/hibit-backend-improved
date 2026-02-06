@@ -4,7 +4,6 @@ package com.hibitbackendimproved.profile.presentation;
 import com.hibitbackendimproved.auth.dto.LoginMember;
 import com.hibitbackendimproved.auth.presentation.AuthenticationPrincipal;
 import com.hibitbackendimproved.profile.application.ProfileService;
-import com.hibitbackendimproved.profile.domain.PersonalityType;
 import com.hibitbackendimproved.profile.dto.request.ProfileCreateRequest;
 import com.hibitbackendimproved.profile.dto.request.ProfileUpdateRequest;
 import com.hibitbackendimproved.profile.dto.response.ProfileOtherResponse;
@@ -20,9 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.List;
-
 @RestController
 public class ProfileController {
     private final ProfileService profileService;
@@ -31,7 +27,7 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @PostMapping("/api/profiles/new")
+    @PostMapping("/api/v1/profile/new")
     public ResponseEntity<ApiResponse<ProfileResponse>> saveMyProfile(@AuthenticationPrincipal final LoginMember loginMember,
                                                                       @Valid @RequestBody final ProfileCreateRequest request) {
         ProfileResponse profileResponse = profileService.save(loginMember.getId(), request);
@@ -39,21 +35,14 @@ public class ProfileController {
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/profiles/personalities")
-    public ResponseEntity<ApiResponse<List<PersonalityType>>> getAvailablePersonalities() {
-        List<PersonalityType> personalities = Arrays.asList(PersonalityType.values());
-        ApiResponse<List<PersonalityType>> apiResponse = ApiResponse.ok(personalities);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
-
-    @GetMapping("/api/profiles/me")
+    @GetMapping("/api/v1/profile/me")
     public ResponseEntity<ApiResponse<ProfileResponse>> findMyProfile(@AuthenticationPrincipal final LoginMember loginMember) {
         ProfileResponse profileResponse = profileService.findMyProfile(loginMember.getId());
         ApiResponse<ProfileResponse> apiResponse = ApiResponse.ok(profileResponse);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/api/profiles/other/{id}")
+    @GetMapping("/api/v1/profile/other/{id}")
     public ResponseEntity<ApiResponse<ProfileOtherResponse>> findOtherProfile(@AuthenticationPrincipal final LoginMember loginMember,
                                                                               @PathVariable(name = "id") final Long otherMemberId) {
         ProfileOtherResponse profileOtherResponse = profileService.findOtherProfile(otherMemberId);
@@ -61,7 +50,7 @@ public class ProfileController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/api/profiles/me")
+    @PutMapping("/api/v1/profile/me")
     public ResponseEntity<ApiResponse<Void>> update(@AuthenticationPrincipal final LoginMember loginMember,
                                                     @Valid @RequestBody final ProfileUpdateRequest request) {
         profileService.update(loginMember.getId(), request);

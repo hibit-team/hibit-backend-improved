@@ -20,7 +20,7 @@ public class PostsSliceResponse {
     public static PostsSliceResponse ofPostSlice(final Slice<Post> postSlice) {
         List<PostResponse> postResponses = postSlice.getContent()
                 .stream()
-                .map(post -> PostResponse.from(post))
+                .map(PostResponse::from)
                 .collect(Collectors.toList());
         return new PostsSliceResponse(postResponses, postSlice.isLast());
     }

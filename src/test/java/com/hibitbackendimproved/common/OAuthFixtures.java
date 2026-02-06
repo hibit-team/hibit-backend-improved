@@ -2,6 +2,7 @@ package com.hibitbackendimproved.common;
 
 
 import com.hibitbackendimproved.auth.dto.OAuthMember;
+import com.hibitbackendimproved.member.domain.SocialType;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -30,29 +31,35 @@ public enum OAuthFixtures {
     }
 
     private static OAuthMember 관리자() {
-        String 관리자_이메일 = "hibit.admin@gmail.com";
-        String 관리자_이름 = "관리자";
-        String 관리자_REFRESH_TOKEN = "aaaaaaaaaa.bbbbbbbbbb.cccccccccc";
-        return new OAuthMember(관리자_이메일, 관리자_이름,관리자_REFRESH_TOKEN);
+        final String 관리자_소셜_로그인_ID = "admin123";
+        final String 관리자_닉네임 = "관리자";
+        final String 관리자_프로필_이미지 = "admin.png";
+        final String 관리자_REFRESH_TOKEN = "aaaaaaaaaa.bbbbbbbbbb.cccccccccc";
+        return new OAuthMember(관리자_소셜_로그인_ID, SocialType.KAKAO, 관리자_REFRESH_TOKEN, 관리자_닉네임, 관리자_프로필_이미지);
     }
 
     private static OAuthMember 팬시() {
-        String 팬시_이메일 = "parang@email.com";
-        String 팬시_이름 = "팬시";
-        String 팬시_REFRESH_TOKEN = "aaaaaaaaaa.bbbbbbbbbb.cccccccccc";
-        return new OAuthMember(팬시_이메일, 팬시_이름, 팬시_REFRESH_TOKEN);
+        final String 팬시_소셜_로그인_ID = "fancy123";
+        final String 팬시_닉네임 = "팬시";
+        final String 팬시_프로필_이미지 = "fancy.png";
+        final String 팬시_REFRESH_TOKEN = "aaaaaaaaaa.bbbbbbbbbb.cccccccccc";
+        return new OAuthMember(팬시_소셜_로그인_ID, SocialType.KAKAO, 팬시_REFRESH_TOKEN, 팬시_닉네임, 팬시_프로필_이미지);
     }
+
     private static OAuthMember MEMBER() {
-        String MEMBER_이메일 = "member@email.com";
-        String MEMBER_이름 = "member";
-        String MEMBER_REFRESH_TOKEN = "aaaaaaaaaa.bbbbbbbbbb.ccccccccc";
-        return new OAuthMember(MEMBER_이메일, MEMBER_이름, MEMBER_REFRESH_TOKEN);
+        final String MEMBER_소셜_로그인_ID = "member123";
+        final String MEMBER_닉네임 = "member";
+        final String MEMBER_프로필_이미지 = "member.png";
+        final String MEMBER_REFRESH_TOKEN = "aaaaaaaaaa.bbbbbbbbbb.ccccccccc";
+        return new OAuthMember(MEMBER_소셜_로그인_ID, SocialType.KAKAO, MEMBER_REFRESH_TOKEN, MEMBER_닉네임, MEMBER_프로필_이미지);
     }
+
     private static OAuthMember CREATOR() {
-        String CREATOR_이메일 = "creator@email.com";
-        String CREATOR_이름 = "creator";
-        String CREATOR_REFRESH_TOKEN = "aaaaaaaaaa.bbbbbbbbbb.ccccccccc";
-        return new OAuthMember(CREATOR_이메일, CREATOR_이름, CREATOR_REFRESH_TOKEN);
+        final String CREATOR_소셜_로그인_ID = "member123";
+        final String CREATOR_닉네임 = "creator";
+        final String CREATOR_프로필_이미지 = "creator.png";
+        final String CREATOR_REFRESH_TOKEN = "aaaaaaaaaa.bbbbbbbbbb.ccccccccc";
+        return new OAuthMember(CREATOR_소셜_로그인_ID, SocialType.KAKAO, CREATOR_REFRESH_TOKEN, CREATOR_닉네임, CREATOR_프로필_이미지);
     }
 
     public String getCode() {

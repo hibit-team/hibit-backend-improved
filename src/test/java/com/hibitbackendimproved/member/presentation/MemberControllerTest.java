@@ -29,13 +29,13 @@ class MemberControllerTest extends ControllerTestSupport {
         given(authService.extractMemberId(더미_엑세스_토큰)).willReturn(팬시_응답.getId());
 
         // when & then
-        mockMvc.perform(get("/api/members/me")
+        mockMvc.perform(get("/api/v1/member/me")
                         .header(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andDo(document("members/find/me/success",
+                .andDo(document("member/find/me/success",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(

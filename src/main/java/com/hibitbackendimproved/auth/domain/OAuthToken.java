@@ -11,9 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 import java.util.Objects;
 
+@Getter
 @Table(name = "oauth_tokens")
 @Entity
 public class OAuthToken extends BaseEntity {
@@ -23,7 +25,7 @@ public class OAuthToken extends BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "members_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;
 
     @Column(name = "refresh_token")
@@ -41,17 +43,5 @@ public class OAuthToken extends BaseEntity {
         if (!Objects.isNull(refreshToken)) {
             this.refreshToken = refreshToken;
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
     }
 }

@@ -13,13 +13,9 @@ import com.hibitbackendimproved.post.exception.InvalidTitleException;
 import com.hibitbackendimproved.post.exception.NotFoundImageFileException;
 import com.hibitbackendimproved.post.exception.NotFoundPostStatusException;
 import com.hibitbackendimproved.post.exception.NotFoundTogetherActivityException;
-import com.hibitbackendimproved.profile.exception.InvalidIntroduceException;
-import com.hibitbackendimproved.profile.exception.InvalidNicknameException;
 import com.hibitbackendimproved.profile.exception.InvalidProfileAlreadyException;
+import com.hibitbackendimproved.profile.exception.InvalidProfileException;
 import com.hibitbackendimproved.profile.exception.NicknameAlreadyTakenException;
-import com.hibitbackendimproved.profile.exception.NotFoundAddressCityException;
-import com.hibitbackendimproved.profile.exception.NotFoundAddressDistrictException;
-import com.hibitbackendimproved.profile.exception.NotFoundPersonalityException;
 import com.hibitbackendimproved.profile.exception.NotFoundProfileException;
 import com.hibitbackendimproved.support.error.dto.ErrorReportRequest;
 import com.hibitbackendimproved.support.error.dto.ErrorResponse;
@@ -63,8 +59,7 @@ public class GlobalExceptionHandler {
             InvalidTitleException.class,
             InvalidContentException.class,
             InvalidExhibitionException.class,
-            InvalidIntroduceException.class,
-            InvalidNicknameException.class,
+            InvalidProfileException.class,
             InvalidProfileAlreadyException.class,
             NicknameAlreadyTakenException.class
     })
@@ -86,9 +81,6 @@ public class GlobalExceptionHandler {
             NotFoundOAuthTokenException.class,
             NotFoundTokenException.class,
             NotFoundMemberException.class,
-            NotFoundAddressCityException.class,
-            NotFoundAddressDistrictException.class,
-            NotFoundPersonalityException.class,
             NotFoundProfileException.class,
             NotFoundImageFileException.class,
             NotFoundPostStatusException.class,

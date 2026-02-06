@@ -35,8 +35,6 @@ public class ProfileService {
         Member foundMember = memberRepository.getByIdOrThrow(memberId);
         Profile profile = createProfile(request, foundMember);
         Profile savedProfile = profileRepository.save(profile);
-
-        updateMemberInfo(foundMember, savedProfile);
         return ProfileResponse.of(savedProfile);
     }
 
@@ -44,17 +42,8 @@ public class ProfileService {
         return Profile.builder()
                 .member(foundMember)
                 .nickname(request.getNickname())
-                .age(request.getAge())
-                .gender(request.getGender())
-                .personality(request.getPersonality())
+                .profileImage(request.getProfileImage())
                 .introduce(request.getIntroduce())
-                .imageName(request.getImageName())
-                .job(request.getJob())
-                .addressCity(request.getAddressCity())
-                .addressDistrict(request.getAddressDistrict())
-                .jobVisible(request.isJobVisibility())
-                .addressVisible(request.isAddressVisibility())
-                .myImageVisibility(request.isMyImageVisibility())
                 .build();
     }
 
@@ -64,51 +53,33 @@ public class ProfileService {
         }
     }
 
-    private void updateMemberInfo(final Member member, final Profile profile) {
-        member.updateNickname(profile.getNickname());
-        memberRepository.save(member);
-    }
-
     @Transactional
     public void update(final Long memberId, final ProfileUpdateRequest request) {
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(NotFoundProfileException::new);
         validateExistByNickname(request.getNickname());
         Member foundMember = memberRepository.getByIdOrThrow(memberId);
-
-        updateProfileInfo(profile, request);
-        updateMemberInfo(foundMember, profile);
+        updateProfile(profile, request);
 
         profileRepository.save(profile);
         memberRepository.save(foundMember);
     }
 
-    private void updateProfileInfo(final Profile profile, final ProfileUpdateRequest request) {
+    private void updateProfile(final Profile profile, final ProfileUpdateRequest request) {
         profile.updateNickname(request.getNickname());
-        profile.updateAge(request.getAge());
-        profile.updateGender(request.getGender());
-        profile.updatePersonality(request.getPersonality());
+        profile.updateProfileImage(request.getProfileImage());
         profile.updateIntroduce(request.getIntroduce());
-        profile.updateImageName(request.getImageName());
-        profile.updateJob(request.getJob());
-        profile.updateAddressCity(request.getAddressCity());
-        profile.updateAddressDistinct(request.getAddressDistrict());
-        profile.updateJobVisible(request.isJobVisibility());
-        profile.updateAddressVisible(request.isAddressVisibility());
-        profile.updateMyImageVisibility(request.isMyImageVisibility());
     }
 
     public ProfileResponse findMyProfile(final Long memberId) {
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundProfileException("프로필을 찾을 수 없습니다."));
-
         return ProfileResponse.of(profile);
     }
 
     public ProfileOtherResponse findOtherProfile(final Long otherMemberId) {
         Profile profile = profileRepository.findByMemberId(otherMemberId)
                 .orElseThrow(() -> new NotFoundProfileException("타인의 프로필을 찾을 수 없습니다."));
-
         return ProfileOtherResponse.of(profile);
     }
 }
